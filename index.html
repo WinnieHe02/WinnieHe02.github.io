@@ -1,0 +1,546 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Winnie He</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gloock&family=Albert+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>body{margin:0} [hidden]{display:none!important}</style>
+<style>
+/* Layout: home = small headshot beside the name, intro in two columns, then three project tiles; each tile opens its own project page (hash views). */
+:root {
+  --bg: #F2F4F1;
+  --surface: #FFFFFF;
+  --fg: #16201C;
+  --muted: #5A6862;
+  --line: #C9D1CB;
+  --accent: #2C6857;
+  --rose: #8C3A2C;
+  --tempo: #7A2117;
+  --ash: #8E2F45;
+  --myco: #8A6748;
+  --display: "Gloock", "Bodoni 72", Didot, Georgia, serif;
+  --body: "Albert Sans", "Helvetica Neue", Arial, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  --cjk: "Noto Serif SC", "Songti SC", "STSong", serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #111614; --surface: #18201D; --fg: #E5EBE7; --muted: #9AA8A1; --line: #34413B;
+    --accent: #7DC2AA; --rose: #D98A74; --tempo: #E0806F; --ash: #E08AA0; --myco: #D2AE8C; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #111614; --surface: #18201D; --fg: #E5EBE7; --muted: #9AA8A1; --line: #34413B;
+  --accent: #7DC2AA; --rose: #D98A74; --tempo: #E0806F; --ash: #E08AA0; --myco: #D2AE8C; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--body); font-size: 17px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+a { color: inherit; text-decoration-color: var(--line); text-underline-offset: 3px; }
+a:hover { text-decoration-color: currentColor; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+img { display: block; max-width: 100%; }
+.wrap { max-width: 1160px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+@media (min-width: 720px) { .wrap { padding-left: max(40px, env(safe-area-inset-left, 0px)); padding-right: max(40px, env(safe-area-inset-right, 0px)); } }
+.wrap.wide { max-width: 1440px; }
+.label { font-family: var(--mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.tempo { --case: var(--tempo); }
+.ash { --case: var(--ash); }
+.myco { --case: var(--myco); }
+
+header.top { padding-block: 22px; }
+header.top .wrap { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; flex-wrap: wrap; }
+.mark { font-family: var(--display); font-size: 22px; text-decoration: none; }
+nav { display: flex; gap: 22px; flex-wrap: wrap; }
+nav a { font-size: 15px; text-decoration: none; color: var(--muted); }
+nav a:hover { color: var(--fg); }
+
+/* ---------- home ---------- */
+.intro { padding-block: 24px 72px; }
+.name-row { --h1: clamp(56px, 11vw, 112px); display: flex; align-items: center; gap: clamp(18px, 3vw, 36px); }
+.name-row h1 { font-size: var(--h1); }
+.intro-grid { display: grid; grid-template-columns: 1fr; gap: 8px 64px; margin-top: 36px; }
+@media (min-width: 900px) { .intro-grid { grid-template-columns: 1fr 1fr; align-items: start; } }
+.intro-grid > * { min-width: 0; }
+h1 { font-family: var(--display); font-weight: 400; font-size: clamp(56px, 11vw, 112px); line-height: .92; letter-spacing: -.02em; margin: 0; }
+.bio { margin: 0; max-width: 56ch; font-size: 19px; line-height: 1.55; }
+.bio p { margin: 0 0 14px; }
+.facts-mini { list-style: none; padding: 0; margin: 6px 0 0; display: grid; gap: 10px; max-width: 620px; }
+.facts-mini li { display: grid; grid-template-columns: 1fr; gap: 2px; padding-top: 10px; border-top: 1px solid var(--line); }
+@media (min-width: 600px) { .facts-mini li { grid-template-columns: 130px 1fr; gap: 16px; } }
+.facts-mini .label { padding-top: 3px; }
+
+.projects { padding-block: 56px 80px; border-top: 1px solid var(--line); }
+.projects + .projects { border-top: 0; padding-top: 8px; }
+.group-head { display: grid; grid-template-columns: 1fr; gap: 6px 40px; margin-bottom: 28px; align-items: baseline; }
+@media (min-width: 900px) { .group-head { grid-template-columns: auto 1fr; } }
+.gh { font-family: var(--display); font-weight: 400; font-size: clamp(36px, 5vw, 52px); line-height: 1; margin: 0; }
+.group-head p { margin: 0; color: var(--muted); max-width: 52ch; }
+.cat { font-family: var(--mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); padding-bottom: 8px; border-bottom: 1px solid var(--line); }
+.ld { --case: var(--accent); }
+.ld-card { --case: var(--accent); display: grid; grid-template-columns: 1fr; gap: 14px 32px; padding: 28px; background: var(--surface); border-left: 4px solid var(--accent); text-decoration: none; }
+@media (min-width: 900px) { .ld-card { grid-template-columns: 180px 1fr 200px; align-items: center; } }
+.ld-code { font-family: var(--display); font-size: clamp(48px, 6vw, 72px); line-height: 1; color: var(--accent); }
+.ld-main { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.ld-title { font-family: var(--display); font-size: clamp(26px, 3vw, 34px); line-height: 1.1; text-wrap: balance; }
+.ld-sub { color: var(--muted); max-width: 56ch; }
+.ld-side { display: flex; flex-direction: column; gap: 8px; }
+.ld-card .go { font-family: var(--mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+.ld-card:hover .ld-title { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 5px; }
+.status { font-family: var(--mono); font-size: 12px; color: var(--accent); }
+.deliv { display: grid; grid-template-columns: 1fr; gap: 12px; margin: 0 0 56px; }
+@media (min-width: 720px) { .deliv { grid-template-columns: repeat(3, 1fr); } }
+.deliv div { background: var(--surface); border-top: 3px solid var(--accent); padding: 20px; }
+.deliv b { display: block; font-family: var(--display); font-weight: 400; font-size: 24px; margin: 4px 0 6px; }
+.deliv p { margin: 0; color: var(--muted); font-size: 15px; }
+.posts { list-style: none; padding: 0; margin: 16px 0 0; display: grid; gap: 0; border-top: 1px solid var(--line); max-width: 760px; }
+.posts li { display: grid; grid-template-columns: 1fr; gap: 4px 20px; padding-block: 16px; border-bottom: 1px solid var(--line); align-items: baseline; }
+@media (min-width: 720px) { .posts li { grid-template-columns: 130px 1fr auto; } }
+.post-title { font-weight: 500; }
+.post-link { font-weight: 500; color: var(--accent); white-space: nowrap; }
+.post-link.pending { color: var(--muted); font-weight: 400; font-size: 14px; }
+.post-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 16px; max-width: 1040px; }
+.essay { max-width: 66ch; font-size: 18px; line-height: 1.7; }
+.essay p { margin: 0 0 20px; }
+.post-card { display: flex; flex-direction: column; gap: 10px; padding: 22px; background: var(--surface); border-top: 3px solid var(--accent); text-decoration: none; min-width: 0; }
+.pc-title { font-family: var(--display); font-size: 24px; line-height: 1.2; text-wrap: balance; }
+.pc-go { margin-top: auto; padding-top: 6px; font-family: var(--mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+.post-card:hover .pc-title { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; }
+.table-wrap { overflow-x: auto; margin: 6px 0 16px; max-width: 820px; }
+.tbl { width: 100%; border-collapse: collapse; font-size: 15.5px; }
+.tbl th { text-align: left; font-family: var(--mono); font-weight: 500; font-size: 11.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); padding: 8px 12px 8px 0; border-bottom: 1px solid var(--fg); }
+.tbl td { padding: 10px 16px 10px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+.tbl td:last-child { padding-right: 0; }
+.tbl tr.total td { font-weight: 600; border-bottom: 0; }
+.tbl td:nth-child(2) { font-variant-numeric: tabular-nums; }
+.quote { font-family: var(--display); font-size: clamp(22px, 2.6vw, 28px); line-height: 1.35; margin: 8px 0 18px; max-width: 34ch; color: var(--accent); }
+.tiles { display: grid; grid-template-columns: 1fr; gap: 28px; }
+@media (min-width: 720px) { .tiles { grid-template-columns: repeat(3, 1fr); gap: 24px; } }
+.tile { text-decoration: none; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.tile .ph { overflow: hidden; background: var(--surface); }
+.tile img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; transition: transform .5s ease; }
+.tile:hover img { transform: scale(1.03); }
+.tile h2 { font-family: var(--display); font-weight: 400; font-size: clamp(30px, 3.4vw, 40px); line-height: 1; margin: 0; color: var(--case); }
+.tile p { margin: 0; color: var(--muted); font-size: 15.5px; }
+.tile .go { font-family: var(--mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--case); }
+
+.contact { padding-block: 56px 40px; border-top: 1px solid var(--line); }
+.contact .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; }
+.mail { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.mail code { font-family: var(--mono); font-size: 16px; user-select: all; background: var(--surface); padding: 8px 12px; border: 1px solid var(--line); overflow-wrap: anywhere; }
+button.copy { font: 500 14px var(--body); color: var(--bg); background: var(--fg); border: 0; padding: 10px 16px; cursor: pointer; }
+button.copy:hover { background: var(--accent); }
+footer { padding-block: 20px 40px; color: var(--muted); font-size: 13px; }
+
+/* ---------- project pages ---------- */
+.project { padding-block: 8px 72px; }
+.back { display: inline-block; margin-bottom: 28px; font-size: 15px; color: var(--muted); text-decoration: none; }
+.back:hover { color: var(--fg); }
+.p-head { display: grid; grid-template-columns: 1fr; gap: 24px; margin-bottom: 36px; }
+@media (min-width: 900px) { .p-head { grid-template-columns: 1.3fr 1fr; gap: 56px; align-items: end; } }
+.p-head h2 { font-family: var(--display); font-weight: 400; font-size: clamp(52px, 9vw, 100px); line-height: .95; letter-spacing: -.01em; margin: 0 0 18px; color: var(--case); }
+.p-head .lede { font-size: 21px; line-height: 1.45; margin: 0; max-width: 36ch; text-wrap: balance; }
+.meta { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 24px; margin: 0; }
+.meta div { border-top: 1px solid var(--line); padding-top: 10px; }
+.meta dt { font-family: var(--mono); font-size: 11.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.meta dd { margin: 2px 0 0; font-size: 15.5px; }
+.cover { margin: 0 0 56px; }
+.cover img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
+.chapter { display: grid; grid-template-columns: 1fr; gap: 20px; padding-block: 36px; border-top: 1px solid var(--line); }
+@media (min-width: 900px) { .chapter { grid-template-columns: 220px 1fr; gap: 40px; } }
+.chapter h3 { font-family: var(--mono); font-weight: 500; font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--case); margin: 4px 0 0; }
+.chapter .body { min-width: 0; }
+.chapter p { margin: 0 0 14px; max-width: 64ch; }
+.chapter ul { margin: 0 0 14px; padding-left: 20px; max-width: 64ch; }
+.chapter li { margin-bottom: 6px; }
+.figs { display: grid; grid-template-columns: 1fr; gap: 12px; margin-top: 20px; }
+@media (min-width: 640px) { .figs.two { grid-template-columns: 1fr 1fr; } }
+.figs figure { margin: 0; min-width: 0; }
+.figs img { width: 100%; height: auto; background: var(--surface); }
+.figs figcaption { font-size: 13px; color: var(--muted); margin-top: 6px; }
+.spreads { display: grid; gap: clamp(12px, 2vw, 24px); margin: 0 calc(-1 * clamp(0px, 3vw, 40px)); }
+.spread { display: block; padding: 0; border: 0; background: var(--surface); cursor: zoom-in; box-shadow: 0 1px 0 var(--line); }
+.spread img { width: 100%; height: auto; }
+.zoom-hint { margin: 14px 0 48px; font-size: 13px; color: var(--muted); }
+.lightbox { position: fixed; inset: 0; z-index: 50; background: rgba(10, 14, 12, .94); overflow: auto; cursor: zoom-out;
+  padding: max(16px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) max(16px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); }
+.lightbox img { display: block; width: auto; max-width: none; height: auto; min-width: 100%; margin: 0 auto; }
+@media (min-width: 1400px) { .lightbox img { min-width: 0; max-width: 100%; } }
+.lightbox .close { position: fixed; top: calc(12px + env(safe-area-inset-top, 0px)); right: calc(12px + env(safe-area-inset-right, 0px)); font: 500 14px var(--body); color: #fff; background: rgba(255,255,255,.12); border: 0; padding: 8px 14px; cursor: pointer; }
+.next { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding-top: 32px; border-top: 1px solid var(--line); }
+.next a { text-decoration: none; }
+.next .label { display: block; }
+.next b { font-family: var(--display); font-weight: 400; font-size: 28px; color: var(--case); }
+.more { display: inline-block; margin-top: 4px; font-weight: 500; color: var(--case); }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="mark" href="#home">Winnie He</a>
+    <nav aria-label="Sections">
+      <a href="#home">Home</a>
+      <a href="#t127">Learning Design</a>
+      <a href="tempolink.html">Product</a>
+      <a href="mycosphere.html">Service</a>
+      <a href="ash.html">Interactive</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<!-- HOME -->
+<div data-view="home">
+  <section class="intro">
+    <div class="wrap">
+      <div class="name-row">
+        <h1>Winnie<br>He</h1>
+      </div>
+      <div class="intro-grid">
+        <div class="bio">
+          <p>I'm a learning designer interested in how psychology, culture, and technology shape the way people learn, especially when they learn together.</p>
+          <p>I come to design from research and art: I start with interviews and observation, then prototype until something holds up in people's hands.</p>
+        </div>
+        <ul class="facts-mini">
+          <li><span class="label">Now</span><span>Ed.M., Learning Design, Innovation &amp; Technology, Harvard Graduate School of Education</span></li>
+          <li><span class="label">Before</span><span>B.A., Psychology and Communication, minor in Education, UCLA</span></li>
+          <li><span class="label">Research</span><span>Honors thesis on how social change shapes the learning of Chinese instrumental music, with Dr. Patricia Greenfield</span></li>
+          <li><span class="label">Music</span><span>Zheng player for over ten years; UCLA Chinese Music Ensemble</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="projects" id="learning">
+    <div class="wrap">
+      <div class="group-head">
+        <h2 class="gh">Learning Design</h2>
+        <p>Learning experiences designed with real learners and grounded in learning science.</p>
+      </div>
+      <a class="ld-card" href="#t127">
+        <span class="ld-code">T127</span>
+        <span class="ld-main">
+          <span class="label">Teaching and Learning Lab Practicum · Harvard GSE</span>
+          <span class="ld-title">Redesigning a Week on Online Learning</span>
+          <span class="ld-sub">Rebuilding a course week that students found isolating and overloaded, and delivering it to this semester's cohort.</span>
+        </span>
+        <span class="ld-side"><span class="status">● In progress · Fall 2026</span><span class="go">View project →</span></span>
+      </a>
+    </div>
+  </section>
+
+  <section class="projects" id="design">
+    <div class="wrap">
+      <div class="group-head">
+        <h2 class="gh">Design</h2>
+        <p>Independent projects across products, services, and spaces, each taken from research to a working prototype.</p>
+      </div>
+      <div class="tiles">
+        <a class="tile tempo" href="tempolink.html">
+          <span class="cat">Product Design</span>
+          <div class="ph"><img src="img/card-tempo.jpg" alt="A zheng player in ensemble rehearsal, with the TempoLink app and wristband"></div>
+          <h2>TempoLink</h2>
+          <p>Tools that help ensembles of traditional Chinese instruments rehearse together.</p>
+          <span class="go">View project →</span>
+        </a>
+        <a class="tile myco" href="mycosphere.html">
+          <span class="cat">Service Design</span>
+          <div class="ph"><img src="img/card-myco.jpg" alt="Mushrooms in a mycelium box, with the MycoSphere tracking app and illustrated sleeve"></div>
+          <h2>MycoSphere</h2>
+          <p>A safer, more sustainable system for Yunnan's wild mushroom markets.</p>
+          <span class="go">View project →</span>
+        </a>
+        <a class="tile ash" href="ash.html">
+          <span class="cat">Interactive Experience Design</span>
+          <div class="ph"><img src="img/card-ash.jpg" alt="Charred objects bound with red cords beneath a projected aerial city image"></div>
+          <h2>The Ash of a Breath</h2>
+          <p>An interactive installation on the 2025 Los Angeles wildfires.</p>
+          <span class="go">View project →</span>
+        </a>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- T127 -->
+<article class="project ld" data-view="t127" hidden>
+  <div class="wrap">
+    <a class="back" href="#home">← All projects</a>
+    <div class="p-head">
+      <div>
+        <span class="label">Learning Design · T127 Teaching and Learning Lab Practicum</span>
+        <h2 style="margin-top:12px">Redesigning a Week on Online Learning</h2>
+        <p class="lede">Rebuilding a course week that past students found isolating and overloaded, then delivering it to this semester's cohort.</p>
+      </div>
+      <dl class="meta">
+        <div><dt>Partner</dt><dd>Bill Wisser, Director, HGSE Teaching and Learning Lab</dd></div>
+        <div><dt>Status</dt><dd>In progress, Fall 2026</dd></div>
+        <div><dt>My focus</dt><dd>Learning design and user research</dd></div>
+        <div><dt>Frameworks</dt><dd>Backward design, Community of Inquiry</dd></div>
+      </dl>
+    </div>
+
+    <div class="deliv" aria-label="Capstone components">
+      <div><span class="label">Capstone product</span><b>Coming December</b><p>The redesigned week as delivered to students.</p></div>
+      <div><span class="label">Written analysis</span><b>Coming December</b><p>Audience, outcomes, design process, theory, and assessment plan.</p></div>
+      <div><span class="label">Gallery walk</span><b>Coming December</b><p>A short public presentation of the work.</p></div>
+    </div>
+
+    <section class="chapter">
+      <h3>The problem</h3>
+      <div class="body">
+        <p>T127 is a practicum in learning design. One of its weeks, on designing for online learning, runs fully online and asynchronous. Feedback from past students was consistent: the week didn't support learning in community, and its tasks took far longer than expected. Our team was asked to redesign it and deliver the new version this semester.</p>
+      </div>
+    </section>
+
+    <section class="chapter">
+      <h3>Research</h3>
+      <div class="body">
+        <p>Before changing anything, I interviewed three learning designers: the week's original designer, a learning designer with a background in learning analytics and AI, and a designer who leads first meetings with faculty.</p>
+        <ul>
+          <li>The original design assumed students had more time than they did. Several layers of design and reflection stacked into overload, even though each one had a reason to be there.</li>
+          <li>Backward design works as a home base: start from outcomes, map activities back to them, and cut what doesn't serve them. More work is not more rigor.</li>
+          <li>Our learners are adults with jobs and families, so workload and cognitive load are design decisions from the first draft.</li>
+          <li>Build a workable first version with the learning goal as the north star, then add layers.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="chapter" id="audience-link">
+      <h3>Audience analysis</h3>
+      <div class="body">
+        <div class="post-cards">
+          <a class="post-card" href="#t127-audience">
+            <span class="label">Design document</span>
+            <span class="pc-title">Who this week is for, and what that means for the design</span>
+            <span class="pc-go">Read →</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="chapter" id="documents">
+      <h3>Project documents</h3>
+      <div class="body">
+        <p>Working documents from the team's shared course site. Opening them requires a Harvard login.</p>
+        <ul class="posts">
+          <li>
+            <span class="label">Charter</span>
+            <span class="post-title">Digital Learning Week Project Charter</span>
+            <a class="post-link" href="https://hu.sharepoint.com/:w:/r/sites/T127Fall26/_layouts/15/Doc.aspx?sourcedoc=%7B1F0F2C24-C784-4703-BD42-4834E50800F6%7D&amp;file=T127%20Digital%20Learning%20Week%20Project%20Charter.docx&amp;action=default&amp;mobileredirect=true" target="_blank" rel="noopener">Open ↗</a>
+          </li>
+          <li>
+            <span class="label">Design</span>
+            <span class="post-title">Flow of Learning</span>
+            <a class="post-link" href="https://hu.sharepoint.com/:w:/r/sites/T127Fall26/_layouts/15/Doc.aspx?sourcedoc=%7BABB16300-E840-44A1-B2CE-820667F26F1A%7D&amp;file=Flow%20of%20Learning.docx&amp;fromShare=true&amp;action=default&amp;mobileredirect=true" target="_blank" rel="noopener">Open ↗</a>
+          </li>
+          <li>
+            <span class="label">Process</span>
+            <span class="post-title">Redesign Rolling Agenda</span>
+            <a class="post-link" href="https://hu.sharepoint.com/:w:/r/sites/T127Fall26/_layouts/15/Doc.aspx?sourcedoc=%7B8DB93B89-CF27-4F6C-84A2-28B10AB26090%7D&amp;file=T127%20Redesign%20Rolling%20Agenda%20Fall%2026.docx&amp;action=default&amp;mobileredirect=true" target="_blank" rel="noopener">Open ↗</a>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="chapter" id="reflections">
+      <h3>Reflective posts</h3>
+      <div class="body">
+        <div class="post-cards">
+          <a class="post-card" href="https://docs.google.com/document/d/1HExhpw1SzUzSwxORUlbVFDjFrxBkDbgep9gOI4eu7BY/edit?tab=t.0" target="_blank" rel="noopener">
+            <span class="label">Reflective Post 1 · Sep 2026</span>
+            <span class="pc-title">Designing “learning to drive” through constructionism</span>
+            <span class="pc-go">Read ↗</span>
+          </a>
+          <a class="post-card" href="https://docs.google.com/document/d/1x589tGr-N7tZaMbv5h8p2p5WW-Zu-D6udyXRt8vTvkg/edit?tab=t.0" target="_blank" rel="noopener">
+            <span class="label">Reflective Post 2 · Oct 2026</span>
+            <span class="pc-title">Every activity needs a purpose, and the week still has to fit</span>
+            <span class="pc-go">Read ↗</span>
+          </a>
+          <a class="post-card" href="#t127-post3">
+            <span class="label">Reflective Post 3 · Nov 2026</span>
+            <span class="pc-title">When the design met the learners</span>
+            <span class="pc-go">Read →</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="chapter">
+      <h3>Next</h3>
+      <div class="body">
+        <p>The redesigned week went live on Canvas in late October and the in-person session ran on October 29. We're now evaluating it against the two original pain points, community and workload, alongside the three learning objectives. This page will be updated with the product, the written analysis, and results.</p>
+      </div>
+    </section>
+
+    <div class="next tempo"><span></span><a href="tempolink.html"><span class="label">Next project</span><b>TempoLink →</b></a></div>
+  </div>
+</article>
+
+<!-- T127 REFLECTIVE POST 3 -->
+<article class="project ld" data-view="t127-post3" hidden>
+  <div class="wrap">
+    <a class="back" href="#t127">← Back to the T127 project</a>
+    <div class="p-head">
+      <div>
+        <span class="label">T127 · Reflective Post 3 · November 2026</span>
+        <h2 style="margin-top:12px">When the Design Met the Learners</h2>
+      </div>
+    </div>
+    <div class="essay">
+      <p>On October 29, the week our team redesigned finally ran with real students. In my last post, I wrote about learning to treat every activity as a trade-off between a learning goal and students' limited time. This week, the student feedback showed me which of our trade-offs held up and which didn't.</p>
+      <p>The first surprise was the pre-work. To lighten the workload, we moved the course analysis into an online pre-work module on Canvas, and we quietly assumed everyone would complete it before class. Many didn't. In our debrief, Bill pointed out that nothing held students accountable, and some students arrived underprepared and confused. Looking back, we should have caught this when we planned our assessment. A short formative check on the pre-work, such as a quiz that asks students to apply the Community of Inquiry model to the course they analyzed, would have shown students what to focus on and shown us who was ready before class began. I want to keep that check small, though. One added only for compliance would become the kind of busywork we set out to remove.</p>
+      <p>The second surprise came from the data. Only 3 of 12 students chose the redesign activity as the most helpful part of the week. Course analysis was chosen most often, followed by reflecting on their own past online learning experiences. That surprised me, because we had built the week around the redesign activity. The feedback suggests why it fell short: students felt rushed, the context cards had too much detail, and groups had little chance to hear each other's ideas. We had trimmed the activity to fit the class session, but it still asked for more than the time allowed.</p>
+      <p>The moment that stuck with me most was the Duolingo Chess example. We hoped students would notice that different levels are designed differently, and that this kind of personalization is possible because the course is online. But we never told students which levels to compare, so most of them didn't reach that conclusion. It reminded me of my first reflective post, when my group struggled to teach driving through constructionism without giving learners any rules. If we want learners to discover something, the design has to lead them toward it. Discovery still needs structure.</p>
+      <p>What humbles me most is who we were as designers. Maeghan and I are T127 students ourselves. We sit in the same classroom, carry the same workload, and know this course from the inside. It's hard to imagine designers closer to their learners than that, and we still couldn't predict how our classmates would respond. I think being insiders even made some things harder to see. As co-designers, we cared deeply about this week, so finishing the pre-work felt obvious to us. Our classmates met it as one more task in an already busy week. Being close to your learners is still different from being them.</p>
+      <p>For the next iteration, we're planning to keep the course analysis, add a small formative check on the pre-work, add short report-outs so groups can learn from one another, and reframe the redesign activity around an authentic task: converting a residential course to online, using the faculty workbook that Teaching and Learning Lab designers actually use.</p>
+      <p>This is why I now see practice and iteration as part of the design itself. No amount of planning could have told us what one class session did. Every assumption we made about students' time, motivation, and attention was tested the moment real learners showed up, and each round of feedback shows us something we couldn't see from our side of the table. A design gets better through those rounds, one version at a time.</p>
+    </div>
+    <div class="next ld"><span></span><a href="#t127"><span class="label">Back to</span><b>Redesigning a Week on Online Learning →</b></a></div>
+  </div>
+</article>
+
+<!-- T127 AUDIENCE ANALYSIS -->
+<article class="project ld" data-view="t127-audience" hidden>
+  <div class="wrap">
+    <a class="back" href="#t127">← Back to the T127 project</a>
+    <div class="p-head">
+      <div>
+        <span class="label">T127 · Audience analysis</span>
+        <h2 style="margin-top:12px">Who This Week Is For</h2>
+        <p class="lede">An analysis of the learners in T127's "Designing for Learning Online" week, and how what we learned about them shaped the redesign.</p>
+      </div>
+      <dl class="meta">
+        <div><dt>Learners</dt><dd>Graduate students in T127, Teaching and Learning Lab Practicum, Harvard GSE</dd></div>
+        <div><dt>Context</dt><dd>Week 9 of a semester-long learning design course</dd></div>
+        <div><dt>Sources</dt><dd>Past student feedback, the original week's materials, interviews with three HGSE learning designers</dd></div>
+        <div><dt>Authors</dt><dd>Winnie He, with Maeghan Grady</dd></div>
+      </dl>
+    </div>
+
+    <section class="chapter">
+      <h3>Who the learners are</h3>
+      <div class="body">
+        <p>T127 students are graduate students at HGSE learning to design learning experiences. Most are adults, and many come in with professional experience as teachers, designers, or education staff. They take T127 alongside a full course load, and often alongside jobs, assistantships, and family responsibilities.</p>
+        <p>By Week 9 they share a common foundation from the course: major learning theories, backward design, and practice designing with peers in class. What they bring unevenly is experience designing for online settings. Nearly all have taken online courses as learners, but far fewer have built one.</p>
+      </div>
+    </section>
+
+    <section class="chapter">
+      <h3>The original week, from their side</h3>
+      <div class="body">
+        <p>The week ran fully online and asynchronous, with no class meeting. Its own checklist estimated about six hours of work:</p>
+        <div class="table-wrap">
+          <table class="tbl">
+            <thead><tr><th>Task</th><th>Estimated time</th></tr></thead>
+            <tbody>
+              <tr><td>Introduction video</td><td>7 min</td></tr>
+              <tr><td>Readings on online learning frameworks</td><td>1 hr</td></tr>
+              <tr><td>Explore and critique an online course in Miro</td><td>2 hr</td></tr>
+              <tr><td>Design activity with a group, posted to Padlet</td><td>2.5 hr</td></tr>
+              <tr><td>Reflection in Harmonize</td><td>30 min</td></tr>
+              <tr class="total"><td>Total</td><td>≈ 6 hr</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>The design activity was synchronous: groups had to find a meeting time on their own in a week with no scheduled class.</p>
+      </div>
+    </section>
+
+    <section class="chapter">
+      <h3>Needs and pain points</h3>
+      <div class="body">
+        <ul>
+          <li><strong>Learning in community.</strong> Past students said the week felt isolating. For a cohort used to designing together in class, an asynchronous week removed the part of the course they valued most.</li>
+          <li><strong>Time.</strong> Students reported the tasks took longer than expected. The original designer noted the week assumed more time and commitment than students had.</li>
+          <li><strong>Cognitive load.</strong> Several layers of design and reflection stacked on top of each other. Each had a purpose, but together they were hard to hold at once.</li>
+          <li><strong>Clarity.</strong> Students needed clearer steps and materials in advance so they could move through the work without guessing.</li>
+          <li><strong>Relevance.</strong> Adult learners engage more when work connects to their own experience, here their own frustrations with online courses.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="chapter">
+      <h3>Implications for the design</h3>
+      <div class="body">
+        <div class="table-wrap">
+          <table class="tbl">
+            <thead><tr><th>What we learned</th><th>Design decision</th></tr></thead>
+            <tbody>
+              <tr><td>Students missed learning together</td><td>Moved from fully asynchronous to residential: online pre-work on Canvas plus an in-person class session</td></tr>
+              <tr><td>Too many tasks for the time available</td><td>Consolidated the learning objectives to three (analyze, evaluate, propose and justify) and cut activities that didn't serve them, including the Jigsaw</td></tr>
+              <tr><td>Group work was hard to schedule</td><td>Moved the core design activity into class time, so no outside coordination is needed</td></tr>
+              <tr><td>Students needed clear steps</td><td>Pre-work built around a structured course analysis worksheet, posted in advance</td></tr>
+              <tr><td>Their own online experience is a resource</td><td>Pre-work asks students to analyze a real online course before class, then apply it in the ReDesign Activity</td></tr>
+              <tr><td>Feedback should be usable</td><td>A short post-class survey with one effectiveness rating per learning objective</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="chapter">
+      <h3>Limits</h3>
+      <div class="body">
+        <p>This analysis draws on past feedback and expert interviews rather than a survey of this semester's cohort, so it describes the audience as a group. The post-class survey is our first direct check on whether the redesign fits this year's students.</p>
+      </div>
+    </section>
+
+    <div class="next ld"><span></span><a href="#t127"><span class="label">Back to</span><b>Redesigning a Week on Online Learning →</b></a></div>
+  </div>
+</article>
+
+
+
+
+
+
+</main>
+
+<section class="contact">
+  <div class="wrap">
+    <span class="label">Contact</span>
+    <div class="mail">
+      <code id="email">winniehe@gse.harvard.edu</code>
+      <button class="copy" id="copyBtn" type="button">Copy email</button>
+    </div>
+  </div>
+</section>
+<div class="lightbox" id="lightbox" hidden><button class="close" type="button" id="lbClose">Close</button><img id="lbImg" alt=""></div>
+<footer><div class="wrap">© 2026 Winnie He</div></footer>
+
+<script>
+(function () {
+  const views = document.querySelectorAll('[data-view]');
+  function show() {
+    const id = (location.hash || '#home').slice(1);
+    const target = document.querySelector('[data-view="' + id + '"]') ? id : 'home';
+    views.forEach(v => { v.hidden = v.dataset.view !== target; });
+    window.scrollTo(0, 0);
+  }
+  window.addEventListener('hashchange', show);
+  show();
+
+  const lb = document.getElementById('lightbox'), lbImg = document.getElementById('lbImg');
+  document.querySelectorAll('.spread').forEach(b => b.addEventListener('click', () => {
+    const im = b.querySelector('img'); lbImg.src = im.src; lbImg.alt = im.alt; lb.hidden = false; document.body.style.overflow = 'hidden'; lb.scrollTop = 0;
+  }));
+  const closeLb = () => { lb.hidden = true; lbImg.removeAttribute('src'); document.body.style.overflow = ''; };
+  lb.addEventListener('click', closeLb);
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && !lb.hidden) closeLb(); });
+  window.addEventListener('hashchange', () => { if (!lb.hidden) closeLb(); });
+
+  const btn = document.getElementById('copyBtn');
+  const email = document.getElementById('email');
+  btn.addEventListener('click', () => {
+    const done = () => { btn.textContent = 'Copied'; setTimeout(() => btn.textContent = 'Copy email', 1600); };
+    const fallback = () => { const r = document.createRange(); r.selectNodeContents(email); const s = getSelection(); s.removeAllRanges(); s.addRange(r); btn.textContent = 'Selected, press ⌘C'; };
+    try { navigator.clipboard.writeText(email.textContent).then(done, fallback); } catch (e) { fallback(); }
+  });
+})();
+</script>
+</body>
+</html>

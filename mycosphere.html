@@ -1,0 +1,487 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MycoSphere · Winnie He</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="MycoSphere: a service system for Yunnan's wild mushroom markets, from a market screen to packaging grown from mycelium. Service design by Winnie He.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bitter:wght@700&family=Montserrat:wght@700;800&family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="project.css">
+<style>
+/* MycoSphere: committed light look from the project's own palette — linen ground, mushroom tan, cocoa text, saffron for data. */
+:root {
+  color-scheme: light;
+  --bg: #FBF8F3;
+  --bg-2: #F3EADF;
+  --fg: #3F3434;
+  --muted: #7C6B66;
+  --line: #E4D6C6;
+  --card: #F0DCC0;
+  --card-fg: #4A3C3C;
+  --tan: #BA9878;
+  --accent: #AF7A62;
+  --on-accent: #FFFFFF;
+  --saffron: #F2A31F;
+  --sand: #F0D0A3;
+  --display: "Montserrat", "Helvetica Neue", Arial, sans-serif;
+  --display-weight: 800;
+  --display-case: uppercase;
+  --display-track: .01em;
+  --body: "Inter", "Helvetica Neue", Arial, sans-serif;
+  --radius: 12px;
+}
+body { background: var(--bg); color: var(--fg); }
+.h2 { color: var(--tan); }
+.eyebrow { color: var(--accent); }
+
+/* hero */
+.m-hero { display: grid; grid-template-columns: 1fr; gap: 28px 56px; align-items: center; }
+@media (min-width: 920px) { .m-hero { grid-template-columns: 1fr 1.15fr; } }
+.m-hero > * { min-width: 0; }
+.wordmark { font-family: "Bitter", Georgia, serif; font-weight: 700; color: var(--tan); font-size: clamp(56px, 9vw, 108px); line-height: .95; margin: 0 0 18px; letter-spacing: -.01em; }
+.m-hero .tags li { background: var(--tan); color: #fff; }
+.m-hero-img { border-radius: 16px; }
+.m-hero-img img { aspect-ratio: 5 / 4; object-fit: cover; }
+
+/* background */
+.donuts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; margin-top: 18px; max-width: 460px; }
+.donuts .donut .val { stroke: var(--saffron); stroke-width: 26; stroke-linecap: butt; }
+.donuts .donut .track { stroke: #FBE2BE; stroke-width: 26; }
+.donuts .donut text { font-size: 26px; fill: var(--fg); }
+.donuts p { text-align: center; margin: 8px 0 0; font-size: 14.5px; color: var(--muted); }
+.place { display: flex; flex-direction: column; gap: 4px; }
+.place b { font-family: var(--display); font-size: clamp(28px, 3.4vw, 40px); line-height: 1; color: var(--fg); }
+.place span { color: var(--muted); font-weight: 600; font-size: 18px; }
+
+.chart-card { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 22px; }
+.gbars { display: grid; grid-template-columns: 44px 1fr; gap: 0 10px; }
+.gaxis { position: relative; height: 260px; }
+.gaxis span { position: absolute; right: 0; transform: translateY(50%); font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.gplot { position: relative; height: 260px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6%; padding: 0 3%; border-bottom: 1.5px solid var(--fg); background-image: repeating-linear-gradient(to top, var(--line) 0 1px, transparent 1px 25%); }
+.gyear { display: flex; align-items: flex-end; justify-content: center; gap: 8%; height: 100%; }
+.gbar { width: 40%; height: calc(var(--v) / 2000 * 100%); border-radius: 4px 4px 0 0; position: relative; transform-origin: bottom; cursor: default; }
+.gbar.a { background: var(--saffron); }
+.gbar.b { background: #C9A46A; }
+.gbar em { position: absolute; left: 50%; bottom: calc(100% + 4px); transform: translateX(-50%); font-style: normal; font-size: 11.5px; font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.js .reveal .gbar { transform: scaleY(0); transition: transform 1s cubic-bezier(.2,.8,.2,1); transition-delay: calc(var(--i) * 120ms + .2s); }
+.js .reveal.in .gbar { transform: none; }
+.js .reveal .gbar em { opacity: 0; transition: opacity .4s calc(var(--i) * 120ms + 1.1s); }
+.js .reveal.in .gbar em { opacity: 1; }
+.gyears { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6%; padding: 6px 3% 0; margin-left: 54px; font-weight: 700; font-size: 13px; text-align: center; }
+.glegend { display: flex; gap: 16px; flex-wrap: wrap; font-size: 13px; color: var(--muted); margin: 6px 0 14px; }
+.glegend i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
+@media (prefers-reduced-motion: reduce) { .js .reveal .gbar, .js .reveal .gbar em { transform: none; opacity: 1; transition: none; } }
+
+.loop { display: grid; grid-template-columns: 1fr; gap: 12px; counter-reset: lp; }
+@media (min-width: 900px) { .loop { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0; } }
+.loop li { list-style: none; background: #EAE4DD; border-radius: 10px; padding: 16px; font-size: 14.5px; position: relative; counter-increment: lp; }
+@media (min-width: 900px) { .loop li { margin-right: 26px; } .loop li:not(:last-child)::after { content: "→"; position: absolute; right: -22px; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: 18px; } }
+.loop li::before { content: counter(lp); display: inline-grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: var(--saffron); color: #fff; font-weight: 700; font-size: 12px; margin-bottom: 8px; }
+.loop-head { display: inline-block; background: #E8890C; color: #fff; font-weight: 700; padding: 8px 14px; border-radius: 6px; margin-bottom: 14px; }
+.loop-back { margin: 10px 0 0; font-size: 13.5px; color: var(--muted); }
+.summary { background: #FCE0B4; border-radius: 10px; padding: 22px; font-size: 18px; line-height: 1.5; margin-top: 28px; }
+
+/* journey */
+.stage-row, .jrow { display: grid; grid-template-columns: repeat(6, minmax(180px, 1fr)); gap: 12px; }
+.stage-row { margin-bottom: 12px; }
+.stage { background: linear-gradient(90deg, #F9E3C4, #FCEFDD); border-radius: 8px; padding: 8px 14px; font-weight: 600; font-size: 14px; text-align: center; }
+.stage.s1 { grid-column: span 2; } .stage.s2 { grid-column: span 3; } .stage.s3 { grid-column: span 1; }
+.journey .flip .face { padding: 0; overflow: hidden; border: 1.5px dashed #D9B98F; }
+.journey .face.front { background: #fff; }
+.journey .face.front img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; }
+.journey .face.front .t { padding: 12px 14px 14px; display: flex; flex-direction: column; gap: 8px; height: 100%; }
+.journey .face.front b { font-size: 15px; line-height: 1.35; }
+.journey .face.back { background: #FBE4C4; padding: 16px; border-style: solid; border-color: #F0C890; }
+.journey .face.back h5 { margin: 0; font-size: 11.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); }
+.journey .face.back p { margin: 0 0 6px; font-size: 15px; line-height: 1.4; font-weight: 600; }
+.feel { position: relative; margin-top: 18px; }
+.feel svg { width: 100%; height: 190px; display: block; overflow: visible; }
+.feel .curve { fill: none; stroke: #E9B66B; stroke-width: 3; }
+.feel .area { fill: #FDF1E1; }
+.feel-notes { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; margin-top: 6px; }
+.feel-notes p { margin: 0; background: #F4ECE2; border-radius: 8px; padding: 10px 12px; font-size: 13.5px; line-height: 1.35; }
+.face-ico { font-size: 0; }
+.legend-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
+.btn { border: 1px solid var(--line); background: #fff; padding: 9px 16px; border-radius: 99px; font-size: 14px; font-weight: 600; cursor: pointer; color: var(--fg); }
+.btn:hover { border-color: var(--accent); }
+
+/* concept */
+.pairs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; background: #F1E7DC; border-radius: 12px; padding: 16px; }
+.pair { display: flex; flex-direction: column; gap: 10px; align-items: stretch; text-align: center; }
+.pair svg { width: 44px; height: 44px; margin: 0 auto; fill: var(--accent); }
+.pair p { margin: 0; background: #fff; border-radius: 6px; padding: 12px; font-size: 14.5px; line-height: 1.35; flex: 1; display: grid; place-items: center; }
+.pair .to { width: 2px; height: 18px; background: var(--tan); margin: 0 auto; flex: none; }
+.pair p.sol { background: #fff; outline: 1.5px solid var(--tan); font-weight: 600; }
+@media (max-width: 560px) { .pairs { grid-template-columns: 1fr; } }
+
+/* experiment */
+.grow { margin: 0; padding-left: 20px; font-size: 15px; }
+.grow li { margin-bottom: 6px; }
+.days { display: grid; grid-template-columns: 1fr; gap: 14px; }
+@media (min-width: 700px) { .days { grid-template-columns: 1fr 1fr; } }
+.days figure { margin: 0; }
+.days figcaption { font-weight: 700; color: var(--accent); font-size: 15px; margin: 0 0 8px; }
+.days img { border-radius: 10px; aspect-ratio: 3 / 2; object-fit: cover; width: 100%; }
+.day-note { background: var(--bg-2); border-radius: 10px; padding: 14px 16px; margin-top: 14px; font-size: 15.5px; }
+.tabbar button[aria-selected="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+.chips { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin: 16px 0; }
+.chips span { background: var(--tan); color: #fff; border-radius: 8px; padding: 10px 12px; font-weight: 700; text-align: center; }
+.cond { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 24px; }
+.cond div { border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; background: #fff; }
+.cond h4 { margin: 0 0 8px; font-size: 13px; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); }
+.cond ul { margin: 0; padding-left: 18px; font-size: 15px; }
+
+/* flow */
+.flow4 { display: grid; grid-template-columns: 1fr; gap: 28px; }
+@media (min-width: 860px) { .flow4 { grid-template-columns: 1fr 1fr; gap: 40px 48px; } }
+.fstep .n { font-family: var(--display); font-weight: 800; font-size: 46px; color: var(--accent); line-height: 1; font-style: italic; }
+.fstep h4 { font-size: 20px; margin: 6px 0 6px; color: var(--accent); }
+.fstep p { margin: 0 0 14px; font-size: 15.5px; max-width: 52ch; }
+
+/* business model */
+.bmc { display: grid; grid-template-columns: 1fr; gap: 12px; }
+@media (min-width: 980px) {
+  .bmc { grid-template-columns: repeat(5, minmax(0, 1fr)); grid-template-areas: "kp ka vp cr cs" "kp kr vp ch cs" "cost cost cost rev rev"; }
+  .b-kp { grid-area: kp; } .b-ka { grid-area: ka; } .b-kr { grid-area: kr; } .b-vp { grid-area: vp; } .b-cr { grid-area: cr; } .b-ch { grid-area: ch; } .b-cs { grid-area: cs; } .b-cost { grid-area: cost; } .b-rev { grid-area: rev; }
+}
+.blk { background: #fff; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+.blk h4 { margin: 0; background: #F6EAD6; padding: 12px 16px; font-size: 17px; color: #7C5A43; }
+.blk.hl h4 { background: var(--tan); color: #fff; }
+.blk ul { margin: 0; padding: 14px 16px 16px 32px; font-size: 14.5px; line-height: 1.45; }
+.blk li { margin-bottom: 10px; }
+.blk li b { display: block; font-weight: 600; }
+.blk.wide { display: grid; grid-template-columns: 1fr; }
+@media (min-width: 640px) { .blk.wide { grid-template-columns: 150px 1fr; } .blk.wide h4 { display: flex; align-items: center; background: var(--tan); color: #fff; font-size: 20px; } }
+
+.next-proj { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; align-items: end; }
+.next-proj a { text-decoration: none; }
+.next-proj small { display: block; color: var(--muted); font-size: 13px; letter-spacing: .1em; text-transform: uppercase; }
+.next-proj b { font-family: var(--display); font-weight: 800; text-transform: uppercase; font-size: clamp(28px, 4vw, 42px); line-height: 1; color: var(--tan); }
+.contact { color: var(--muted); font-size: 14px; }
+.contact code { font-family: inherit; color: var(--fg); user-select: all; }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="wrap">
+    <a class="home" href="index.html#home">← Winnie He</a>
+    <nav aria-label="Projects">
+      <a href="index.html#t127">Learning Design</a>
+      <a href="tempolink.html">TempoLink</a>
+      <a href="mycosphere.html" aria-current="page">MycoSphere</a>
+      <a href="ash.html">The Ash of a Breath</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<section class="hero">
+  <div class="wrap m-hero">
+    <div>
+      <p class="eyebrow">Service Design · 2025</p>
+      <h1 class="wordmark">MycoSphere</h1>
+      <p class="lede" style="font-weight:600;color:var(--tan)">An intelligent mushroom system that brings together biotechnology, the Internet of Things and circular design.</p>
+      <p class="body-text" style="margin:0">I redesigned the whole journey of wild mushrooms, from the forest to the dinner table. NFC and blockchain traceability make food safety visible, packaging grown from mycelium closes a zero-waste loop, and a color indicator on the box shows when the mushrooms are best to eat.</p>
+      <ul class="tags"><li>UX design</li><li>Package design</li><li>Service design</li></ul>
+      <dl class="meta">
+        <div><dt>Role</dt><dd>Solo project</dd></div>
+        <div><dt>Year</dt><dd>2025</dd></div>
+        <div><dt>Place</dt><dd>Kunming, Yunnan</dd></div>
+        <div><dt>Output</dt><dd>App, screen, packaging</dd></div>
+      </dl>
+    </div>
+    <button class="zoom m-hero-img" type="button" data-cap="MycoSphere packaging">
+      <img src="p/m-hero.webp" alt="Wild mushrooms packed in a box grown from mycelium, beside its illustrated sleeve" width="1800" height="2121">
+    </button>
+  </div>
+</section>
+
+<!-- BACKGROUND -->
+<section class="sec" id="background">
+  <div class="wrap">
+    <p class="eyebrow">Background</p>
+    <h2 class="h2 reveal">China's wild mushroom market</h2>
+    <div class="split wide-left">
+      <figure class="reveal from-left">
+        <button class="zoom" type="button" data-cap="Wild mushroom regions of China, with Kunming highlighted">
+          <img src="p/m-map.webp" alt="Map of China with Yunnan circled and Kunming highlighted"  loading="lazy">
+        </button>
+      </figure>
+      <div class="reveal" style="--d:.15s">
+        <div class="place"><b>Yunnan, Kunming</b><span>The largest wild mushroom market in the country</span></div>
+        <p class="body-text" style="margin-top:16px">The region's edible wild mushrooms account for more than half of those found worldwide, and two-thirds of the varieties available in China.</p>
+        <h3 class="h3" style="margin-top:24px;font-size:20px;color:var(--fg)">Major income source</h3>
+        <p class="body-text" style="font-size:15.5px">Yunnan is a global powerhouse for wild mushrooms, holding a large share of the world's species and production. It supplies Europe, Japan and South Korea with high-value exports like matsutake, earning over $1 billion a year, and specialized markets and mushroom tourism drive the local economy.</p>
+        <div class="donuts">
+          <div><svg class="donut" viewBox="0 0 160 160" data-value="70" role="img" aria-label="Yunnan: 70 percent of China's mushroom production"><circle class="track" cx="80" cy="80" r="56"/><circle class="val" cx="80" cy="80" r="56"/><text x="80" y="90" text-anchor="middle"><tspan data-count="70" data-suf="%">0%</tspan></text></svg><p>Yunnan's share of China's mushroom production</p></div>
+          <div><svg class="donut" viewBox="0 0 160 160" data-value="36" role="img" aria-label="Yunnan: 36 percent of global mushroom production"><circle class="track" cx="80" cy="80" r="56"/><circle class="val" cx="80" cy="80" r="56"/><text x="80" y="90" text-anchor="middle"><tspan data-count="36" data-suf="%">0%</tspan></text></svg><p>Yunnan's share of global mushroom production</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROBLEM -->
+<section class="sec" id="problem">
+  <div class="wrap">
+    <p class="eyebrow">Current problem</p>
+    <h2 class="h2 reveal">Poisoning keeps rising</h2>
+    <div class="split">
+      <div class="chart-card reveal">
+        <strong>Wild mushroom poisoning in China</strong>
+        <div class="glegend"><span><i style="background:var(--saffron)"></i>Outbreaks</span><span><i style="background:#C9A46A"></i>People poisoned</span></div>
+        <div class="gbars" role="img" aria-label="Mushroom poisoning in China. Outbreaks: 2021 327, 2022 482, 2023 505, 2024 about 600. People poisoned: 2021 923, 2022 1332, 2023 1303, 2024 about 1480.">
+          <div class="gaxis" aria-hidden="true"><span style="bottom:100%">2000</span><span style="bottom:75%">1500</span><span style="bottom:50%">1000</span><span style="bottom:25%">500</span><span style="bottom:0">0</span></div>
+          <div class="gplot">
+            <div class="gyear"><span class="gbar a" style="--v:327;--i:0"><em>327</em></span><span class="gbar b" style="--v:923;--i:0"><em>923</em></span></div>
+            <div class="gyear"><span class="gbar a" style="--v:482;--i:1"><em>482</em></span><span class="gbar b" style="--v:1332;--i:1"><em>1,332</em></span></div>
+            <div class="gyear"><span class="gbar a" style="--v:505;--i:2"><em>505</em></span><span class="gbar b" style="--v:1303;--i:2"><em>1,303</em></span></div>
+            <div class="gyear"><span class="gbar a" style="--v:600;--i:3"><em>≈600</em></span><span class="gbar b" style="--v:1480;--i:3"><em>≈1,480</em></span></div>
+          </div>
+        </div>
+        <div class="gyears" aria-hidden="true"><span>2021</span><span>2022</span><span>2023</span><span>2024</span></div>
+      </div>
+      <div class="reveal" style="--d:.15s">
+        <p class="body-text">Mushroom poisoning is a serious food safety problem in China. Since 2019, China CDC has investigated a series of poisoning outbreaks, and news reports regularly describe incidents caused by people eating wild mushrooms by mistake.</p>
+        <button class="zoom" type="button" data-cap="Wild mushroom markets in Yunnan">
+          <img src="p/m-market.webp" alt="Nine photos of wild mushroom markets and roadside sellers in Yunnan" width="1313" height="1065" loading="lazy">
+        </button>
+      </div>
+    </div>
+
+    <div class="reveal" style="margin-top:56px">
+      <span class="loop-head">The complicated status quo</span>
+      <ol class="loop" style="padding:0;margin:0">
+        <li class="reveal" style="--d:.0s">The local government promotes the wild mushroom market for economic reasons and encourages foraging.</li>
+        <li class="reveal" style="--d:.15s">The Safety and Health Department tells people not to eat wild mushrooms, to avoid poisoning.</li>
+        <li class="reveal" style="--d:.3s">Current measures focus on building hospitals and rural clinics so poisoned people can get treatment quickly.</li>
+        <li class="reveal" style="--d:.45s">Yet only a few wild mushroom markets are standardized and officially supervised.</li>
+        <li class="reveal" style="--d:.6s">The government suggests buying from "legitimate sources." But where are they?</li>
+      </ol>
+      <p class="loop-back">↻ And the cycle starts again.</p>
+    </div>
+    <p class="summary reveal"><strong>Summary.</strong> The industry needs stronger regulation, so that local residents can earn more while visitors who don't know wild mushrooms are better protected.</p>
+  </div>
+</section>
+
+<!-- JOURNEY -->
+<section class="sec" id="journey">
+  <div class="wrap">
+    <p class="eyebrow">Research</p>
+    <h2 class="h2 reveal">User journey map</h2>
+    <p class="lede reveal">I followed a mushroom from the forest to a buyer mailing it home, and mapped how the buyer feels at each stage.</p>
+    <div class="legend-row">
+      <p class="hint" style="margin:0">Tap a step to see its pain point and insight</p>
+      <button class="btn" type="button" data-flip-all="jmap" data-label-on="Show all pain points" data-label-off="Back to the steps">Show all pain points</button>
+    </div>
+    <div class="scroll-x journey">
+      <div style="min-width:1140px">
+        <div class="stage-row reveal"><div class="stage s1">Before entering the market</div><div class="stage s2">In the market</div><div class="stage s3">Leaving the market</div></div>
+        <div class="jrow" id="jmap">
+          <button class="flip reveal" style="--d:0s" type="button" aria-pressed="false"><span class="flip-inner"><span class="face front"><img src="p/m-j1.webp" alt="" loading="lazy"><span class="t"><b>Foragers pick fresh mushrooms in the wild</b><span class="flip-cue">Pain point ↻</span></span></span><span class="face back"><h5>Pain point</h5><p>No detection service</p><h5>Insight</h5><p>Mushroom toxin detection</p></span></span></button>
+          <button class="flip reveal" style="--d:.08s" type="button" aria-pressed="false"><span class="flip-inner"><span class="face front"><img src="p/m-j2.webp" alt="" loading="lazy"><span class="t"><b>Minivans drive the fresh mushrooms into the market</b><span class="flip-cue">Pain point ↻</span></span></span><span class="face back"><h5>Pain point</h5><p>Unsafe and inconvenient, and it disrupts other people</p><h5>Insight</h5><p>A designated area for mushroom delivery</p></span></span></button>
+          <button class="flip reveal" style="--d:.16s" type="button" aria-pressed="false"><span class="flip-inner"><span class="face front"><img src="p/m-j3.webp" alt="" loading="lazy"><span class="t"><b>Vendors sell mushrooms to customers</b><span class="flip-cue">Pain point ↻</span></span></span><span class="face back"><h5>Pain point</h5><p>Worried about buying mushrooms of unknown origin</p><h5>Insight</h5><p>Mushroom toxin detection</p></span></span></button>
+          <button class="flip reveal" style="--d:.24s" type="button" aria-pressed="false"><span class="flip-inner"><span class="face front"><img src="p/m-j4.webp" alt="" loading="lazy"><span class="t"><b>Customers walk around the market</b><span class="flip-cue">Pain point ↻</span></span></span><span class="face back"><h5>Pain point</h5><p>Too little information and guidance for customers</p><h5>Insight</h5><p>Informative guidance in the market</p></span></span></button>
+          <button class="flip reveal" style="--d:.32s" type="button" aria-pressed="false"><span class="flip-inner"><span class="face front"><img src="p/m-j5.webp" alt="" loading="lazy"><span class="t"><b>Customers talk to vendors, check and buy</b><span class="flip-cue">Pain point ↻</span></span></span><span class="face back"><h5>Pain point</h5><p>Hard to communicate with local vendors</p><h5>Insight</h5><p>Digital assistance during the conversation</p></span></span></button>
+          <button class="flip reveal" style="--d:.4s" type="button" aria-pressed="false"><span class="flip-inner"><span class="face front"><img src="p/m-j6.webp" alt="" loading="lazy"><span class="t"><b>Mushrooms are packed and mailed</b><span class="flip-cue">Pain point ↻</span></span></span><span class="face back"><h5>Pain point</h5><p>Mushrooms are temperature-sensitive, so a foam box isn't the best choice</p><h5>Insight</h5><p>Better packaging options</p></span></span></button>
+        </div>
+        <div class="feel reveal">
+          <svg viewBox="0 0 1140 190" preserveAspectRatio="none" aria-label="How buyers feel through the journey: unsafe, then happy, then lost, then frustrated, then happy" role="img">
+            <path class="area" d="M0 190 L0 120 C60 120 80 150 114 150 C170 150 190 40 260 40 C330 40 380 160 470 160 C560 160 640 130 730 130 C820 130 900 50 1040 50 C1090 50 1120 60 1140 60 L1140 190 Z"/>
+            <path class="curve draw" d="M0 120 C60 120 80 150 114 150 C170 150 190 40 260 40 C330 40 380 160 470 160 C560 160 640 130 730 130 C820 130 900 50 1040 50 C1090 50 1120 60 1140 60"/>
+            <g class="pop" style="--i:0"><circle cx="114" cy="150" r="20" fill="#FBD34D" stroke="#3F3434" stroke-width="2"/><circle cx="107" cy="146" r="2.2" fill="#3F3434"/><circle cx="121" cy="146" r="2.2" fill="#3F3434"/><path d="M106 160 q8 -7 16 0" stroke="#3F3434" stroke-width="2" fill="none"/></g>
+            <g class="pop" style="--i:1"><circle cx="260" cy="40" r="20" fill="#FBD34D" stroke="#3F3434" stroke-width="2"/><circle cx="253" cy="36" r="2.2" fill="#3F3434"/><circle cx="267" cy="36" r="2.2" fill="#3F3434"/><path d="M251 45 q9 9 18 0" stroke="#3F3434" stroke-width="2" fill="none"/></g>
+            <g class="pop" style="--i:2"><circle cx="470" cy="160" r="20" fill="#FBD34D" stroke="#3F3434" stroke-width="2"/><circle cx="463" cy="156" r="2.2" fill="#3F3434"/><circle cx="477" cy="156" r="2.2" fill="#3F3434"/><path d="M462 170 q8 -7 16 0" stroke="#3F3434" stroke-width="2" fill="none"/></g>
+            <g class="pop" style="--i:3"><circle cx="730" cy="130" r="20" fill="#FBD34D" stroke="#3F3434" stroke-width="2"/><circle cx="723" cy="125" r="2.6" fill="#3F3434"/><circle cx="737" cy="125" r="2.6" fill="#3F3434"/><ellipse cx="730" cy="139" rx="4" ry="5" fill="#3F3434"/></g>
+            <g class="pop" style="--i:4"><circle cx="1040" cy="50" r="20" fill="#FBD34D" stroke="#3F3434" stroke-width="2"/><circle cx="1033" cy="46" r="2.2" fill="#3F3434"/><circle cx="1047" cy="46" r="2.2" fill="#3F3434"/><path d="M1031 55 q9 9 18 0" stroke="#3F3434" stroke-width="2" fill="none"/></g>
+          </svg>
+          <div class="feel-notes">
+            <p>Feeling unsafe because of the vans driving around</p>
+            <p>Happy to buy fresh mushrooms straight from the vans</p>
+            <p>Having trouble finding the type of mushroom I want</p>
+            <p>Frustrated talking to vendors because of the language barrier</p>
+            <p>Happy that I can mail the mushrooms back home</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONCEPT -->
+<section class="sec" id="concept">
+  <div class="wrap">
+    <div class="split">
+      <div>
+        <p class="eyebrow">Design concept</p>
+        <h2 class="h2 reveal">Define the problem</h2>
+        <div class="pairs reveal">
+          <div class="pair"><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="14" cy="18" r="6"/><circle cx="34" cy="18" r="6"/><path d="M4 40c0-7 4-12 10-12s10 5 10 12zM24 40c0-7 4-12 10-12s10 5 10 12z"/></svg><p>Communication is hard between buyers and vendors.</p><span class="to"></span><p class="sol">More digital information and assistance</p></div>
+          <div class="pair"><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="10" y="6" width="28" height="36" rx="3"/><rect x="16" y="14" width="16" height="3" fill="#fff"/><rect x="16" y="21" width="16" height="3" fill="#fff"/><rect x="16" y="28" width="16" height="3" fill="#fff"/></svg><p>Buyers worry whether mushrooms are safe.</p><span class="to"></span><p class="sol">Information that guarantees safety</p></div>
+          <div class="pair"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 4l16 6v12c0 10-7 18-16 22C15 40 8 32 8 22V10z"/><path d="M17 24l5 5 9-10" stroke="#fff" stroke-width="3.5" fill="none"/></svg><p>The condition of the mushrooms isn't clear.</p><span class="to"></span><p class="sol">Cues that show freshness</p></div>
+        </div>
+      </div>
+      <figure class="reveal" style="--d:.15s">
+        <h3 class="h3" style="color:var(--tan)">System map</h3>
+        <p class="body-text" style="font-size:15px">From these pain points I built a system of packaging, a large market screen and an app, to address unclear information, poor communication and short shelf life.</p>
+        <button class="zoom" type="button" data-cap="MycoSphere system map">
+          <img src="p/m-sysmap.webp" alt="System map connecting merchants, customers, the app, the market screen, NFC tags and packaging" width="1220" height="1320" loading="lazy">
+        </button>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- BLUEPRINT -->
+<section class="sec" id="blueprint">
+  <div class="wrap">
+    <p class="eyebrow">Service design</p>
+    <h2 class="h2 reveal">Service blueprint</h2>
+    <p class="lede reveal">Every touchpoint across four phases, from before purchase to after, with the frontstage, backstage and support processes behind it.</p>
+    <div class="scroll-x reveal">
+      <button class="zoom" type="button" style="min-width:820px" data-cap="Service blueprint">
+        <img src="pages/myco-04.webp" alt="Service blueprint with phases, touchpoints, customer journey, frontstage, backstage and support processes" width="2600" height="1839" loading="lazy">
+      </button>
+    </div>
+    <p class="hint">Click to view full size</p>
+  </div>
+</section>
+
+<!-- MATERIALS -->
+<section class="sec" id="materials">
+  <div class="wrap">
+    <p class="eyebrow">Material experiments</p>
+    <h2 class="h2 reveal">Growing the package</h2>
+    <div class="split wide-right">
+      <div class="reveal">
+        <h3 class="h3" style="color:var(--fg)">Mycelium</h3>
+        <p class="body-text" style="font-size:15.5px">The root-like network of thread-like structures (hyphae) that forms the body of fungi. It's a sustainable, biodegradable material.</p>
+        <ol class="grow">
+          <li><b>Substrate.</b> The fungi are fed organic waste such as agricultural byproducts.</li>
+          <li><b>Growth.</b> Hyphae grow through the substrate and bind it into a strong network.</li>
+          <li><b>Molding.</b> The mixture is placed in molds to grow into a shape.</li>
+          <li><b>Stopping growth.</b> Drying or heating stops the growth and leaves a stable, solid material.</li>
+        </ol>
+      </div>
+      <figure class="reveal" style="--d:.15s">
+        <button class="zoom" type="button" data-cap="Growing mycelium containers">
+          <img src="p/m-mycelium.webp" alt="Stages of a mycelium container growing in a round mold" loading="lazy">
+        </button>
+        <figcaption>From substrate to finished container</figcaption>
+      </figure>
+    </div>
+
+    <div class="reveal" style="margin-top:56px" data-tabs>
+      <h3 class="h3" style="color:var(--fg)">Seven days, two containers</h3>
+      <p class="body-text" style="font-size:15.5px">A controlled comparison: the same mushrooms in a mycelium container and a standard foam box, under the same light and position.</p>
+      <div class="tabbar" role="tablist" aria-label="Day of the experiment">
+        <button type="button" role="tab" aria-selected="true">Day 1</button>
+        <button type="button" role="tab" aria-selected="false" tabindex="-1">Day 3</button>
+        <button type="button" role="tab" aria-selected="false" tabindex="-1">Day 5</button>
+        <button type="button" role="tab" aria-selected="false" tabindex="-1">Day 7</button>
+      </div>
+      <div role="tabpanel" class="panel"><div class="days"><figure><figcaption>Mycelium</figcaption><img src="p/m-d0-myc.webp" alt="Day 1, mycelium container" loading="lazy"></figure><figure><figcaption>Foam plastic</figcaption><img src="p/m-d0-foam.webp" alt="Day 1, foam box" loading="lazy"></figure></div><p class="day-note">All samples start fresh, chosen from the same batch.</p></div>
+      <div role="tabpanel" class="panel" hidden><div class="days"><figure><figcaption>Mycelium</figcaption><img src="p/m-d1-myc.webp" alt="Day 3, mycelium container" loading="lazy"></figure><figure><figcaption>Foam plastic</figcaption><img src="p/m-d1-foam.webp" alt="Day 3, foam box" loading="lazy"></figure></div><p class="day-note">Water droplets start to form inside both, with more inside the foam box.</p></div>
+      <div role="tabpanel" class="panel" hidden><div class="days"><figure><figcaption>Mycelium</figcaption><img src="p/m-d2-myc.webp" alt="Day 5, mycelium container" loading="lazy"></figure><figure><figcaption>Foam plastic</figcaption><img src="p/m-d2-foam.webp" alt="Day 5, foam box" loading="lazy"></figure></div><p class="day-note">Clear mold inside the foam box, and every mushroom in it has started to mold.</p></div>
+      <div role="tabpanel" class="panel" hidden><div class="days"><figure><figcaption>Mycelium</figcaption><img src="p/m-d3-myc.webp" alt="Day 7, mycelium container" loading="lazy"></figure><figure><figcaption>Foam plastic</figcaption><img src="p/m-d3-foam.webp" alt="Day 7, foam box" loading="lazy"></figure></div><p class="day-note">The mycelium container is in much better condition. The foam box shows extensive mold.</p></div>
+    </div>
+
+    <div class="split" style="margin-top:56px">
+      <div class="reveal">
+        <h3 class="h3" style="color:var(--fg)">Result</h3>
+        <p class="body-text" style="font-size:15.5px">Mushrooms stored in mycelium kept their structure much better and oxidized less. Those in foam decomposed further, with a strong odor, visible mold and more liquid runoff, likely because moisture was trapped inside.</p>
+        <div class="chips"><span>Lightweight</span><span>Breathable</span><span>Antibacterial</span><span>Antioxidant</span></div>
+      </div>
+      <figure class="reveal" style="--d:.15s">
+        <button class="zoom" type="button" data-cap="Mycelium vs foam plastic">
+          <img src="p/m-radar.webp" alt="Radar chart comparing mycelium and foam plastic on usability, cost, dryness, air permeability and odor" width="900" height="496" loading="lazy">
+        </button>
+      </figure>
+    </div>
+    <div class="cond reveal">
+      <div><h4>Materials</h4><ul><li>Mycelium containers</li><li>Plastic foam containers</li><li>A mixed set of mushrooms, 250 g per unit</li></ul></div>
+      <div><h4>Conditions</h4><ul><li>Room temperature, 28–30 °C</li><li>Both containers covered with plastic wrap</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<!-- PACKAGE -->
+<section class="sec" id="package">
+  <div class="wrap">
+    <p class="eyebrow">Product</p>
+    <h2 class="h2 reveal">Package design</h2>
+    <p class="lede reveal">Strips of mycelium hold the mushrooms in place inside, using less material than bubble wrap. A strip of lac-dye indicator on the side changes color as the mushrooms age, from fresh to medium fresh to spoiled.</p>
+    <div class="hotpage reveal">
+      <img src="pages/myco-07.webp" alt="Package design page: the mycelium box and sleeve, interior strips, colorimetric indicator results, and experiment details" width="2600" height="1839" loading="lazy">
+      <button class="hs" type="button" style="left:2.5%;top:8.4%;width:58.6%;height:59%" data-zoom="p/m-pk-box.webp" data-cap="The package"><span>The package</span></button>
+      <button class="hs" type="button" style="left:2.5%;top:70.3%;width:58.6%;height:26.3%" data-zoom="p/m-pk-detail.webp" data-cap="Interior fixation"><span>Inside the box</span></button>
+      <button class="hs" type="button" style="left:62%;top:3.5%;width:36%;height:57.6%" data-zoom="p/m-pk-indicator.webp" data-cap="Results of the colorimetric indicator"><span>Freshness indicator</span></button>
+      <button class="hs" type="button" style="left:62%;top:61.45%;width:36%;height:35.1%" data-zoom="p/m-pk-exp.webp" data-cap="Indicator on the package"><span>Indicator on the box</span></button>
+    </div>
+    <p class="hint">Click any module to view it full size</p>
+  </div>
+</section>
+
+<!-- INTERFACE -->
+<section class="sec" id="interface">
+  <div class="wrap">
+    <p class="eyebrow">Product</p>
+    <h2 class="h2 reveal">Interface design</h2>
+    <p class="lede reveal">The app traces each mushroom back to the person who gathered it, and adds a market, recipes and a community. The market screen shows today's popular mushrooms, prices and a map of stalls.</p>
+    <div class="hotpage reveal">
+      <img src="pages/myco-06.webp" alt="Interface design page: color palette, main functions, market map, and app screens for home, gatherer info, recommendations, market, recipes and community" width="2600" height="1839" loading="lazy">
+      <button class="hs" type="button" style="left:2.4%;top:8.4%;width:35.4%;height:54.6%" data-zoom="p/m-ui-system.webp" data-cap="Color and main functions"><span>Color &amp; functions</span></button>
+      <button class="hs" type="button" style="left:0%;top:63.2%;width:40.6%;height:34.5%" data-zoom="p/m-ui-market.webp" data-cap="Market map and NFC tracking"><span>Market map</span></button>
+      <button class="hs" type="button" style="left:42.2%;top:3.1%;width:55.6%;height:46.9%" data-zoom="p/m-ui-top.webp" data-cap="Home, gatherer info and recommendations"><span>Home &amp; traceability</span></button>
+      <button class="hs" type="button" style="left:42.2%;top:50%;width:55.6%;height:46.9%" data-zoom="p/m-ui-bottom.webp" data-cap="Market, recipe and community"><span>Market, recipes, community</span></button>
+    </div>
+    <p class="hint">Click any module to view it full size</p>
+  </div>
+</section>
+
+<!-- FLOW -->
+<section class="sec" id="flow">
+  <div class="wrap">
+    <p class="eyebrow">Experience</p>
+    <h2 class="h2 reveal">User flow</h2>
+    <div class="flow4">
+      <article class="fstep reveal"><span class="n">01</span><h4>View market information</h4><p>On the market's large screen, buyers see today's popular mushrooms and price changes, so they can find what they want quickly.</p><button class="zoom" type="button" data-cap="01 View market information"><img src="p/m-flow-1.webp" alt="Buyers using the market screen" loading="lazy"></button></article>
+      <article class="fstep reveal" style="--d:.12s"><span class="n">02</span><h4>Select mushrooms</h4><p>Holding a phone to a vendor's NFC tag brings up the mushroom's traceability record, so buyers can purchase with confidence.</p><button class="zoom" type="button" data-cap="02 Select mushrooms"><img src="p/m-flow-2.webp" alt="A buyer tapping a phone on a vendor's NFC tag" loading="lazy"></button></article>
+      <article class="fstep reveal"><span class="n">03</span><h4>Pack the mushrooms</h4><p>The dedicated packaging keeps mushrooms fresh longer and shows the best time to eat them.</p><button class="zoom" type="button" data-cap="03 Pack the mushrooms"><img src="p/m-flow-3.webp" alt="The mycelium box in a fridge, with the freshness strip" loading="lazy"></button></article>
+      <article class="fstep reveal" style="--d:.12s"><span class="n">04</span><h4>Cook with mushrooms</h4><p>Recipes in the app guide the cooking, and buying again later is faster and easier.</p><button class="zoom" type="button" data-cap="04 Cook with mushrooms"><img src="p/m-flow-4.webp" alt="Cooking mushrooms with a recipe on a phone" loading="lazy"></button></article>
+    </div>
+  </div>
+</section>
+
+<!-- BUSINESS -->
+<section class="sec" id="business">
+  <div class="wrap">
+    <p class="eyebrow">Strategy</p>
+    <h2 class="h2 reveal">Business model</h2>
+    <div class="bmc reveal">
+      <div class="blk b-kp"><h4>Key partnerships</h4><ul><li>Supply chain partners, such as high-quality strain suppliers</li><li>Channel and promotion partners, such as welfare procurement platforms</li><li>Certification and standards partners, such as organic food certification bodies</li></ul></div>
+      <div class="blk b-ka"><h4>Key activities</h4><ul><li><b>Product research and development</b>Continuous optimization and R&amp;D of mycelium biomaterials</li><li><b>Production and quality control</b>Strain cultivation and quality control</li></ul></div>
+      <div class="blk b-kr"><h4>Key resources</h4><ul><li><b>Product research and development</b>Continuous optimization and R&amp;D of mycelium biomaterials</li><li><b>Production and quality control</b>Strain cultivation and quality control</li></ul></div>
+      <div class="blk hl b-vp"><h4>Value propositions</h4><ul><li><b>Food safety and trust</b>Blockchain gives full, transparent traceability</li><li><b>Environmental and social value</b>Zero-waste recycling: compostable packaging returns to nature</li><li><b>Efficiency and brand value</b>A transparent supply chain builds consumer trust</li><li><b>Innovation</b>A working case of a sustainable food system</li></ul></div>
+      <div class="blk b-cr"><h4>Customer relationships</h4><ul><li><b>Automated service</b>In-app guidance system</li><li><b>Human support</b>Online consultation with experts</li></ul></div>
+      <div class="blk b-ch"><h4>Channels</h4><ul><li><b>After-sales service network</b>Online customer service, and city service points for packaging recycling</li><li><b>Partner service system</b>Data and API integration with farm and retailer systems</li></ul></div>
+      <div class="blk b-cs"><h4>Customer segments</h4><ul><li><b>Health-minded city dwellers</b>Care about food safety and a sustainable lifestyle</li><li><b>Tech-savvy parents</b>Value children's food education and new ways to spend time as a family</li><li><b>Business customers</b>High-end restaurants and retail, and enterprise procurement</li></ul></div>
+      <div class="blk wide b-cost"><h4>Cost structure</h4><ul><li>Production: mycelium packaging</li><li>Operations: supply chain management</li><li>R&amp;D: platform development</li></ul></div>
+      <div class="blk wide b-rev"><h4>Revenue streams</h4><ul><li>Product sales: mushrooms</li><li>Technical services: farm traceability system</li><li>Advertising: large-screen ad space in the market</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="wrap next-proj">
+    <a href="ash.html"><small>Next project</small><b>The Ash of a Breath →</b></a>
+    <p class="contact">Contact · <code id="email">winniehe@gse.harvard.edu</code></p>
+  </div>
+</section>
+</main>
+<script src="project.js"></script>
+</body>
+</html>

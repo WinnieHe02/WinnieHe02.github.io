@@ -1,0 +1,480 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The Ash of a Breath · Winnie He</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="The Ash of a Breath: an interactive installation on the January 2025 Los Angeles wildfires, where visitors' breath brings survivors' stories back. By Winnie He.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="project.css">
+<style>
+/* The Ash of a Breath: committed dark look from the installation — night navy, smoke grey, ember rose and cord red. */
+:root {
+  color-scheme: dark;
+  --bg: #08081A;
+  --bg-2: #12121F;
+  --fg: #F1EEF0;
+  --muted: #A9A3AE;
+  --line: rgba(241, 238, 240, .14);
+  --card: #1F1F28;
+  --card-fg: #F1EEF0;
+  --rose: #B4475A;
+  --ember: #E8697E;
+  --cord: #7A1220;
+  --accent: #E8697E;
+  --on-accent: #1A0408;
+  --display: "Anton", "Impact", "Arial Narrow", sans-serif;
+  --display-weight: 400;
+  --display-case: uppercase;
+  --display-track: .01em;
+  --body: "Inter", "Helvetica Neue", Arial, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  --radius: 14px;
+}
+body { background: var(--bg); color: var(--fg); }
+.eyebrow { color: var(--ember); font-family: var(--mono); font-weight: 500; }
+.lede { font-family: var(--mono); font-size: clamp(16px, 1.6vw, 18px); line-height: 1.65; }
+.tags li { background: #6E2A3A; color: #F6D9DF; font-family: var(--mono); text-transform: none; letter-spacing: 0; font-size: 14px; }
+.video-btn { display: inline-flex; align-items: center; gap: 10px; margin-top: 22px; background: var(--rose); color: #fff; text-decoration: none; padding: 12px 20px; border-radius: 99px; font-weight: 600; font-size: 15px; }
+.video-btn:hover { background: var(--ember); color: var(--on-accent); }
+.video-btn::before { content: ""; width: 0; height: 0; border-left: 10px solid currentColor; border-top: 6px solid transparent; border-bottom: 6px solid transparent; }
+.intro { display: grid; grid-template-columns: 1fr; gap: 24px 56px; margin-top: 36px; }
+@media (min-width: 920px) { .intro { grid-template-columns: 1.4fr 1fr; } }
+
+/* background */
+.hl { color: var(--ember); }
+.photos2 { display: grid; grid-template-columns: 1fr 1.75fr; gap: 12px; margin: 20px 0; }
+.photos2 img { height: 100%; object-fit: cover; aspect-ratio: auto; }
+.counters { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 26px 0 8px; }
+.counter { border: 1.5px solid var(--rose); border-radius: 12px; padding: 16px; }
+.counter b { display: block; font-family: var(--display); font-weight: 400; font-size: clamp(30px, 4vw, 46px); line-height: 1; color: var(--fg); }
+.counter span { font-size: 14px; color: var(--muted); }
+.counter b span { font-size: inherit; color: inherit; }
+@media (max-width: 560px) { .counters { grid-template-columns: 1fr; } }
+.co2 { width: 100%; height: auto; overflow: visible; }
+.co2 .grid { stroke: rgba(241,238,240,.12); }
+.co2 .line { fill: none; stroke: var(--ember); stroke-width: 3; }
+.co2 .area { fill: url(#co2fill); }
+.co2 text { fill: var(--muted); font-family: var(--mono); font-size: 13px; }
+.co2 .val { fill: var(--fg); font-weight: 500; text-anchor: middle; font-size: 14px; }
+.co2 .dot { fill: var(--bg); stroke: var(--ember); stroke-width: 2.5; }
+
+/* voices */
+.voices { columns: 1; column-gap: 16px; }
+@media (min-width: 640px) { .voices { columns: 2; } }
+@media (min-width: 1000px) { .voices { columns: 3; } }
+.bubble { break-inside: avoid; background: #26262E; border: 2px solid #3A3A44; border-radius: 16px; padding: 18px 20px; margin: 0 0 16px; position: relative; }
+.bubble:nth-child(3n+1) { border-color: var(--rose); }
+.bubble::after { content: ""; position: absolute; left: 26px; bottom: -12px; border: 12px solid transparent; border-top-color: inherit; border-bottom: 0; }
+.bubble b { display: block; font-size: 14.5px; margin-bottom: 6px; }
+.bubble p { margin: 0; font-size: 15.5px; line-height: 1.5; color: #DCD7DD; }
+.js .voices .bubble.reveal { transform: translateY(18px) scale(.96); }
+.js .voices .bubble.reveal.in { transform: none; }
+
+/* survivors */
+.story { display: grid; grid-template-columns: 1fr; gap: 28px 48px; }
+@media (min-width: 920px) { .story { grid-template-columns: 1fr 1.3fr; align-items: start; } }
+.pull { font-family: Georgia, "Times New Roman", serif; font-weight: 700; font-size: clamp(26px, 3.2vw, 40px); line-height: 1.15; margin: 0; }
+.who { margin-top: 14px; font-family: var(--mono); font-size: 13.5px; color: var(--muted); }
+.sbub { background: var(--rose); color: #fff; border-radius: 18px; padding: 18px 22px; font-size: 16px; line-height: 1.5; position: relative; margin: 0 0 18px 18px; }
+.sbub::before { content: ""; position: absolute; left: -14px; bottom: 16px; border: 14px solid transparent; border-right-color: var(--rose); border-left: 0; }
+.their { background: var(--cord); border-radius: 22px; padding: clamp(20px, 3vw, 36px); margin-top: 48px; }
+.their-grid { display: grid; grid-template-columns: 1fr; gap: 14px; margin-top: 18px; }
+@media (min-width: 760px) { .their-grid { grid-template-columns: 1fr 1fr; } }
+.their .face.front { background: #0D0D18; color: var(--fg); min-height: 170px; }
+.their .face.back { background: #F4E9EC; color: #2A0A12; font-size: 15px; line-height: 1.5; }
+.their .face.front b { font-family: var(--mono); font-weight: 500; font-size: 15px; letter-spacing: .02em; }
+.their .face.front q { font-family: Georgia, serif; font-size: 24px; line-height: 1.2; font-weight: 700; quotes: "“" "”"; }
+.their .closing { font-size: clamp(18px, 2vw, 22px); margin: 24px 0 0; max-width: 46ch; }
+.source { font-size: 13px; color: var(--muted); margin-top: 16px; }
+.btn { border: 1px solid rgba(255,255,255,.35); background: transparent; color: #fff; padding: 9px 16px; border-radius: 99px; font-size: 14px; font-weight: 600; cursor: pointer; }
+.btn:hover { background: rgba(255,255,255,.1); }
+
+/* concept tabs */
+.tab-body { display: grid; grid-template-columns: 1fr; gap: 24px 40px; align-items: center; }
+@media (min-width: 900px) { .tab-body { grid-template-columns: 1fr 1.3fr; } }
+.tab-body h3 { color: var(--ember); }
+.tabbar button { font-family: var(--mono); }
+.layers .tabbar button[aria-selected="true"], .tabbar button[aria-selected="true"] { background: var(--rose); border-color: var(--rose); color: #fff; }
+.outcome { display: grid; grid-template-columns: 1fr; gap: 24px 40px; }
+@media (min-width: 920px) { .outcome { grid-template-columns: 1fr 1fr; } }
+.outcome .main img { aspect-ratio: 4 / 5; object-fit: cover; }
+.layer-panel { display: grid; grid-template-columns: 1fr; gap: 16px; }
+.layer-panel img { border-radius: 12px; aspect-ratio: 1 / 1; object-fit: cover; }
+.layer-panel p { margin: 0; font-size: 16.5px; }
+.layer-num { font-family: var(--display); font-size: 64px; line-height: .9; color: var(--rose); }
+.pair2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+.pair2 img { aspect-ratio: 1 / 1.05; object-fit: cover; }
+
+/* tech */
+.tech { display: grid; grid-template-columns: 1fr; gap: 24px 40px; }
+@media (min-width: 980px) { .tech { grid-template-columns: .9fr 1.1fr 1.2fr; } }
+.tech > * { min-width: 0; }
+.tech-photos { display: grid; gap: 10px; align-content: start; }
+.flowlist { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+.flowlist li { padding: 10px 14px; border-radius: 8px; font-size: 14.5px; background: #F2EEF0; color: #24131A; position: relative; }
+.flowlist li.k { background: var(--rose); color: #fff; font-weight: 600; }
+.flowlist li.t { background: transparent; color: var(--muted); padding: 2px 14px; font-family: var(--mono); font-size: 13px; }
+.flowlist li.d { background: transparent; border: 1.5px dashed var(--muted); color: var(--fg); }
+.lane h4 { font-family: var(--mono); font-weight: 500; font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--ember); margin: 0 0 10px; }
+.lane + .lane { margin-top: 26px; }
+pre { margin: 0; background: #F6F5F7; color: #2B2B33; border-radius: 10px; padding: 16px 18px; font-family: var(--mono); font-size: 12.5px; line-height: 1.55; overflow-x: auto; }
+pre .k { color: #A3324A; } pre .f { color: #2F6CB0; } pre .n { color: #B5651D; } pre .s { color: #2F8A55; }
+.code-tabs .tabbar { margin-bottom: 10px; }
+
+/* scenario */
+.scen { display: grid; grid-template-columns: 1fr; gap: 20px; }
+@media (min-width: 760px) { .scen { grid-template-columns: 1fr 1fr; } }
+.scen figure img { aspect-ratio: 1 / 1; object-fit: cover; }
+.scen figcaption { display: flex; gap: 12px; align-items: flex-start; font-size: 15.5px; color: var(--fg); margin-top: 12px; }
+.scen figcaption b { flex: none; width: 28px; height: 28px; border-radius: 8px; background: var(--rose); display: grid; place-items: center; font-size: 14px; }
+.fb { display: grid; grid-template-columns: 1fr; gap: 16px; }
+@media (min-width: 760px) { .fb { grid-template-columns: 1fr 1fr; } }
+.fb blockquote { margin: 0; background: #6A1420; border-radius: 20px; padding: 22px 24px; font-size: 18px; line-height: 1.5; box-shadow: 0 6px 0 rgba(0,0,0,.25); }
+
+.next-proj { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; align-items: end; }
+.next-proj a { text-decoration: none; }
+.next-proj small { display: block; color: var(--muted); font-size: 13px; letter-spacing: .1em; text-transform: uppercase; font-family: var(--mono); }
+.next-proj b { font-family: var(--display); font-weight: 400; text-transform: uppercase; font-size: clamp(30px, 4.4vw, 50px); line-height: 1; }
+.contact { color: var(--muted); font-size: 14px; }
+.contact code { font-family: inherit; color: var(--fg); user-select: all; }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="wrap">
+    <a class="home" href="index.html#home">← Winnie He</a>
+    <nav aria-label="Projects">
+      <a href="index.html#t127">Learning Design</a>
+      <a href="tempolink.html">TempoLink</a>
+      <a href="mycosphere.html">MycoSphere</a>
+      <a href="ash.html" aria-current="page">The Ash of a Breath</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<section class="hero">
+  <div class="wrap">
+    <button class="zoom" type="button" data-zoom="pages/ash-01.webp" data-cap="The Ash of a Breath · cover">
+      <img src="pages/ash-01.webp" alt="The Ash of a Breath cover: charred objects bound with red cords beneath a projected aerial image of Los Angeles at night" width="2600" height="1839">
+    </button>
+    <div class="intro">
+      <div>
+        <p class="eyebrow">Interactive Experience Design · 2025</p>
+        <p class="lede" style="margin:0">An interactive installation about wildfire loss and recovery. Visitors move among objects that stand for different stages of the fires' aftermath, and blowing on an object plays a story or video from someone who lived through it. The installation asks what small, meaningful actions we can take to support recovery and community healing.</p>
+        <ul class="tags"><li>Installation design</li><li>Experience design</li></ul>
+        <a class="video-btn" href="https://drive.google.com/file/d/1sUD0BKwanc-O1A4iStr3xITYuHjzBnc-/view?usp=sharing" target="_blank" rel="noopener">Watch the installation video</a>
+      </div>
+      <dl class="meta" style="align-self:end">
+        <div><dt>Role</dt><dd>Solo project</dd></div>
+        <div><dt>Year</dt><dd>2025</dd></div>
+        <div><dt>Interaction</dt><dd>Breath</dd></div>
+        <div><dt>Build</dt><dd>Arduino, Processing</dd></div>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<!-- BACKGROUND -->
+<section class="sec" id="background">
+  <div class="wrap">
+    <p class="eyebrow">Background</p>
+    <h2 class="h2 reveal">January 2025</h2>
+    <div class="split">
+      <div class="reveal">
+        <p class="body-text">My project takes inspiration from the <span class="hl">California wildfires of January 2025</span>, when Los Angeles and San Diego counties faced weeks of destructive fires that displaced families, destroyed habitats and made the air unbreathable. As a UCLA student, I lived under smoke-filled skies and the unsettling quiet that followed. Friends were evacuated, and some lost their homes.</p>
+        <div class="photos2">
+          <button class="zoom" type="button" data-cap="The fires"><img src="p/a-fire.webp" alt="Palm trees burning at night" loading="lazy"></button>
+          <button class="zoom" type="button" data-cap="Smoke seen from UCLA"><img src="p/a-smoke.webp" alt="A huge smoke plume over the city, seen from a campus building" loading="lazy"></button>
+        </div>
+        <p class="body-text muted" style="font-size:15px">The fires killed at least 31 people, with later estimates of up to 440 related deaths.</p>
+      </div>
+      <div class="reveal" style="--d:.15s">
+        <div class="counters">
+          <div class="counter"><b><span data-count="200000">0</span>+</b><span>people evacuated</span></div>
+          <div class="counter"><b><span data-count="18000">0</span>+</b><span>homes and structures destroyed</span></div>
+          <div class="counter"><b><span data-count="57529">0</span></b><span>acres burned (23,281 ha)</span></div>
+        </div>
+        <figure style="margin-top:20px">
+          <button class="zoom" type="button" data-cap="Wildfire area comparison"><img src="p/a-area.webp" alt="Chart comparing area affected by wildfires in the US from 2017 to 2024" loading="lazy"></button>
+          <figcaption>Wildfire area comparison, 2017–2024</figcaption>
+        </figure>
+      </div>
+    </div>
+    <div class="split" style="margin-top:48px">
+      <div class="reveal">
+        <h3 class="h3" style="color:var(--ember)">Reasons behind</h3>
+        <p class="body-text">California's wildfires are growing more frequent and intense because of <strong>climate change, land management practices and urban development</strong>. Rising temperatures, long droughts and shifting rainfall have dried out the landscape, so even a small spark can start a huge fire. Climate change alone is linked to about a quarter of the extreme fuel dryness in recent fires, making them larger and more intense than they would otherwise have been.</p>
+      </div>
+      <figure class="reveal" style="--d:.15s">
+        <svg class="co2" viewBox="0 0 600 240" role="img" aria-label="Carbon dioxide concentration rising: 400 ppm in 2014 to 2015, 415.9 in 2021, 427 in 2023 to 2024, 429.6 in 2025">
+          <defs><linearGradient id="co2fill" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#E8697E" stop-opacity=".35"/><stop offset="1" stop-color="#E8697E" stop-opacity="0"/></linearGradient></defs>
+          <line class="grid" x1="30" y1="40" x2="590" y2="40"/><line class="grid" x1="30" y1="115" x2="590" y2="115"/><line class="grid" x1="30" y1="190" x2="590" y2="190"/>
+          <path class="area pop" style="--i:6" d="M60 168 L260 100 L430 52 L540 40 L540 190 L60 190 Z"/>
+          <path class="line draw" d="M60 168 L260 100 L430 52 L540 40"/>
+          <g class="pop" style="--i:0"><circle class="dot" cx="60" cy="168" r="6"/><text class="val" x="60" y="152">400 ppm</text></g>
+          <g class="pop" style="--i:2"><circle class="dot" cx="260" cy="100" r="6"/><text class="val" x="260" y="84">415.9</text></g>
+          <g class="pop" style="--i:4"><circle class="dot" cx="430" cy="52" r="6"/><text class="val" x="430" y="36">427</text></g>
+          <g class="pop" style="--i:5"><circle class="dot" cx="540" cy="40" r="6"/><text class="val" x="540" y="24">429.6</text></g>
+          <text x="60" y="214" text-anchor="middle">2014–15</text><text x="260" y="214" text-anchor="middle">2021</text><text x="430" y="214" text-anchor="middle">2023–24</text><text x="540" y="214" text-anchor="middle">2025</text>
+        </svg>
+        <figcaption>Atmospheric CO₂ concentration over the past decade</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- VOICES -->
+<section class="sec" id="voices">
+  <div class="wrap">
+    <p class="eyebrow">Research</p>
+    <h2 class="h2 reveal">Online voices</h2>
+    <div class="voices">
+      <div class="bubble reveal" style="--d:0s"><b>@Halleberry</b><p>This is from my hood. Look at the sky. That is smoke, not clouds, from a fire that has consumed over 2,900 acres and remains uncontained.</p></div>
+      <div class="bubble reveal" style="--d:.08s"><b>@DoggoMaestro</b><p>It got out of control very quickly and is now just ridiculous… hope all the best for the animals in the fire.</p></div>
+      <div class="bubble reveal" style="--d:.16s"><b>@Snow</b><p>Returning to school in Cali in a few days, terrified for my friends and peers struggling through this right now.</p></div>
+      <div class="bubble reveal" style="--d:.24s"><b>@SaraXVlong</b><p>This is heartbreaking. The scale of devastation is unimaginable, and my heart goes out to everyone affected.</p></div>
+      <div class="bubble reveal" style="--d:.32s"><b>@Suzi Hixon</b><p>Great. Just as the Santa Ana winds are kicking in. Ugh!</p></div>
+      <div class="bubble reveal" style="--d:.4s"><p>So grateful to the firefighters and teams risking their lives to put down the fires. Praying for everyone to be safe and for the winds to die down soon.</p></div>
+      <div class="bubble reveal" style="--d:.48s"><b>@Moon</b><p>Oh, home insurance companies will run away from California for sure, because they can't afford to pay for all the homes burned.</p></div>
+      <div class="bubble reveal" style="--d:.56s"><b>@David Wolf</b><p>First a tornado happened in Cali. Then a massive snowstorm with ice and tornadoes. A wildfire and potentially another major snowstorm. 2025 isn't messing around…</p></div>
+    </div>
+    <p class="body-text reveal" style="margin-top:12px">People's reflections centered on a new appreciation for essentials over possessions, a renewed sense of community and the importance of government response, and deep loss, fear and grief among those directly affected. They also pointed to the need for better disaster preparedness, and to the role of climate change and poor planning in how bad the fires became.</p>
+  </div>
+</section>
+
+<!-- SURVIVORS -->
+<section class="sec" id="survivors">
+  <div class="wrap">
+    <p class="eyebrow">Research</p>
+    <h2 class="h2 reveal">Interviews from the survivors</h2>
+    <div class="story">
+      <div class="reveal">
+        <p class="pull">“When they came back they told me I needed to identify Rory. I was just numb.”</p>
+        <p class="who">Shelley Sykes, 62, Malibu</p>
+      </div>
+      <div>
+        <p class="sbub reveal">He always said, “It isn't what happens to you in life that counts. It's what you do about it.” When it was announced that they wanted us to evacuate, Rory's feet swelled up with the heat and he said, “Leave me.”</p>
+        <p class="sbub reveal">I saw cinders on Rory's cottage roof. I said to him, “If it gets hot or you feel uncomfortable, just sit in the shower.” I've tiled it; I've made a special-needs shower. Then I raced to get help. There were firefighters about half a mile away.</p>
+        <p class="sbub reveal">But they said they had no water, so I said, “Please, you've got to go break down the door and take him out,” and I gave them directions to the property. When they came back they told me I needed to identify Rory. I was just numb.</p>
+      </div>
+    </div>
+    <div class="story" style="margin-top:36px">
+      <div class="reveal"><p class="who" style="margin-top:0">Katherine Turman, 61, Pasadena</p></div>
+      <p class="sbub reveal" style="background:#3A3A44">My immediate blocks were all miraculously spared by the fire; my house was fine. Friends and I are now feeling survivor's guilt, but we'll channel that empathy into action to help our community wherever possible in the coming days, weeks, months and, I'm sure, unbelievably, years.</p>
+    </div>
+
+    <div class="their reveal">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+        <h3 class="h3" style="margin:0;text-transform:none;font-family:var(--body);font-weight:700">Their story</h3>
+        <button class="btn" type="button" data-flip-all="their" data-label-on="Read all stories" data-label-off="Hide stories">Read all stories</button>
+      </div>
+      <div class="their-grid" id="their">
+        <button class="flip" type="button" aria-pressed="false"><span class="flip-inner"><span class="face front"><b>Heather McAlpine, 33 · Altadena</b><q>Get everyone out</q><span class="flip-cue">Read story ↻</span></span><span class="face back">I popped my head up a few times to get air. Then I decided just to run. I grabbed the dog from the outdoor patio, shoved him in my truck, and I just gunned it out of there. And that was it.</span></span></button>
+        <button class="flip" type="button" aria-pressed="false"><span class="flip-inner"><span class="face front"><b>Isaac Baeza, 49 · Altadena</b><q>A firefighter fought to keep his own home</q><span class="flip-cue">Read story ↻</span></span><span class="face back">I'm a fire captain, and I was just praying to God: “Please let my house be standing. Haven't I done enough? Haven't I saved enough houses to earn some credits to have my house standing?”</span></span></button>
+        <button class="flip" type="button" aria-pressed="false"><span class="flip-inner"><span class="face front"><b>Monique Marez, 43 · Pacific Palisades</b><q>The entire mountain was on fire</q><span class="flip-cue">Read story ↻</span></span><span class="face back">But when I got down to the bottom of my hill, this cop was telling everybody to get out of their cars because the fire had come. If I would've had my car, I would've made it up to my house to get my animals, and I didn't. We have lost everything.</span></span></button>
+        <button class="flip" type="button" aria-pressed="false"><span class="flip-inner"><span class="face front"><b>Jacob Deutsch, 29 · Beverly Hills</b><q>He helped rescue dozens of animals</q><span class="flip-cue">Read story ↻</span></span><span class="face back">I figured, let me drive around and see what I can do. People started waving me down, and the look on their face — they had no idea what they should do or where they should go with their animals. I've saved maybe 95 animals.</span></span></button>
+      </div>
+      <p class="closing">Each story became one of the meaningful objects in my installation, carrying stories like theirs.</p>
+      <p class="source">Survivor accounts collected from news coverage of the January 2025 fires.</p>
+    </div>
+  </div>
+</section>
+
+<!-- RESEARCH & BRAINSTORM -->
+<section class="sec" id="research">
+  <div class="wrap">
+    <p class="eyebrow">Process</p>
+    <h2 class="h2 reveal">Observation, research and brainstorm</h2>
+    <p class="lede reveal">Three kinds of harm shaped the objects: the loss of wildlife, the health risks people face from toxic smoke, and the trauma communities carry through displacement and long fights with insurers.</p>
+    <div class="split">
+      <figure class="reveal"><button class="zoom" type="button" data-cap="Observation and research"><img src="p/a-research.webp" alt="Observation and research: loss of wildlife, impact on human beings, trauma in community" loading="lazy"></button><figcaption>Observation and research</figcaption></figure>
+      <figure class="reveal" style="--d:.15s"><button class="zoom" type="button" data-cap="Brainstorm"><img src="p/a-brainstorm.webp" alt="Brainstorm map around the January wildfire in Los Angeles" loading="lazy"></button><figcaption>Brainstorm</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<!-- CONCEPT -->
+<section class="sec" id="concept">
+  <div class="wrap">
+    <p class="eyebrow">Design concept</p>
+    <h2 class="h2 reveal">Three iterations</h2>
+    <div class="reveal" data-tabs>
+      <div class="tabbar" role="tablist" aria-label="Iteration">
+        <button type="button" role="tab" aria-selected="true">Iteration 1</button>
+        <button type="button" role="tab" aria-selected="false" tabindex="-1">Iteration 2</button>
+        <button type="button" role="tab" aria-selected="false" tabindex="-1">Final draft</button>
+      </div>
+      <div role="tabpanel" class="panel"><div class="tab-body"><div><h3 class="h3">Pure smoke</h3><p class="body-text">The first version worked more like a fine art installation. It lacked interaction: it created atmosphere but couldn't actively communicate anything.</p></div><button class="zoom" type="button" data-cap="Iteration 1"><img src="p/a-it1.webp" alt="Sketch of a burned tree surrounded by smoke clouds" loading="lazy"></button></div></div>
+      <div role="tabpanel" class="panel" hidden><div class="tab-body"><div><h3 class="h3">From disaster to reflection</h3><p class="body-text">Smoke could be too triggering for some viewers. Instead of emphasizing the disaster itself, the installation should focus on reflection, inviting the audience to think about recovery, resilience, and how to prevent such tragedies in the future.</p></div><button class="zoom" type="button" data-cap="Iteration 2"><img src="p/a-it2.webp" alt="Sketch of objects hanging from cords beneath smoke" loading="lazy"></button></div></div>
+      <div role="tabpanel" class="panel" hidden><div class="tab-body"><div><h3 class="h3">Breath as the interaction</h3><p class="body-text">The installation unfolds in layers, from immediate destruction to long-term recovery. Visitors pick up story-linked objects and blow on them to trigger short videos. The act stands for both how little one person can do to stop a disaster and the meaningful action still possible afterward, inviting reflection on loss, remembrance and collective recovery.</p></div><button class="zoom" type="button" data-cap="Final draft"><img src="p/a-final.webp" alt="Three-step storyboard: a visitor walks in, blows on an object, and a video plays" loading="lazy"></button></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- OUTCOME -->
+<section class="sec" id="outcome">
+  <div class="wrap">
+    <p class="eyebrow">Final outcome</p>
+    <h2 class="h2 reveal">Three layers of objects</h2>
+    <div class="outcome">
+      <div class="reveal from-left">
+        <button class="zoom main" type="button" data-cap="Final installation"><img src="p/a-out-main.webp" alt="The finished installation under a projected aerial city image" loading="lazy"></button>
+        <div class="pair2">
+          <button class="zoom" type="button" data-cap="Detail"><img src="p/a-out-2.webp" alt="A charred fox and a frame bound in red cord" loading="lazy"></button>
+          <button class="zoom" type="button" data-cap="Detail"><img src="p/a-out-3.webp" alt="A charred rabbit among red cords" loading="lazy"></button>
+        </div>
+      </div>
+      <div class="reveal from-right layers" data-tabs>
+        <div class="tabbar" role="tablist" aria-label="Layer">
+          <button type="button" role="tab" aria-selected="true">First layer</button>
+          <button type="button" role="tab" aria-selected="false" tabindex="-1">Second layer</button>
+          <button type="button" role="tab" aria-selected="false" tabindex="-1">Third layer</button>
+        </div>
+        <div role="tabpanel" class="panel"><div class="layer-panel"><span class="layer-num">01</span><p>Burned branches and animals show the most immediate effect: the fire's destruction of the environment.</p><button class="zoom" type="button" data-cap="First layer"><img src="p/a-l1.webp" alt="Charred animals and branches" loading="lazy"></button></div></div>
+        <div role="tabpanel" class="panel" hidden><div class="layer-panel"><span class="layer-num">02</span><p>Medical and personal items stand for the long-term effects on people's lives. A mask, a cane and burned clothes carry the lasting damage of survival.</p><button class="zoom" type="button" data-cap="Second layer"><img src="p/a-l2.webp" alt="A mask and burned clothes" loading="lazy"></button></div></div>
+        <div role="tabpanel" class="panel" hidden><div class="layer-panel"><span class="layer-num">03</span><p>Pills, photo frames and burned letters: fragments of psychological pain that call for remembrance and rebuilding.</p><button class="zoom" type="button" data-cap="Third layer"><img src="p/a-l3.webp" alt="Pills, a photo frame and burned letters" loading="lazy"></button></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TECH -->
+<section class="sec" id="tech">
+  <div class="wrap">
+    <p class="eyebrow">Build</p>
+    <h2 class="h2 reveal">Technical support</h2>
+    <p class="lede reveal">Each object hides a breath sensor wired to an Arduino. When the sensor detects a breath, it sends a signal to a Processing sketch that plays the matching video.</p>
+    <div class="tech">
+      <div class="tech-photos reveal">
+        <button class="zoom" type="button" data-cap="Arduino and breath sensor"><img src="p/a-tech-1.webp" alt="Arduino board wired to a breath sensor" loading="lazy"></button>
+        <button class="zoom" type="button" data-cap="Sensor inside the bird"><img src="p/a-tech-2.webp" alt="Arduino and sensor attached to a charred bird" loading="lazy"></button>
+        <button class="zoom" type="button" data-cap="Sensor inside the rabbit"><img src="p/a-tech-3.webp" alt="Arduino inside the rabbit's body" loading="lazy"></button>
+      </div>
+      <div class="reveal" style="--d:.12s">
+        <div class="lane">
+          <h4>Hardware loop</h4>
+          <ol class="flowlist">
+            <li class="k">The sensor picks up a breath</li>
+            <li class="t">checked every 10, 5 or 3 s</li>
+            <li>The Arduino loop detects it and sends “e” over serial</li>
+            <li>Processing watches the serial port and receives “e”</li>
+            <li class="k">Play the matching video</li>
+            <li class="d">No signal: keep sensing</li>
+          </ol>
+        </div>
+        <div class="lane">
+          <h4>Visitor flow</h4>
+          <ol class="flowlist">
+            <li class="k">The visitor arrives at the installation</li>
+            <li>Views and touches different objects</li>
+            <li>Reads how the interaction works</li>
+            <li class="t">20 s later</li>
+            <li class="k">Starts blowing</li>
+            <li>The sensor senses the airflow</li>
+            <li class="t">2 s later</li>
+            <li class="k">The video plays for at least 30 s</li>
+          </ol>
+        </div>
+      </div>
+      <div class="reveal code-tabs" style="--d:.24s" data-tabs>
+        <div class="tabbar" role="tablist" aria-label="Code">
+          <button type="button" role="tab" aria-selected="true">Arduino</button>
+          <button type="button" role="tab" aria-selected="false" tabindex="-1">Processing</button>
+        </div>
+        <div role="tabpanel" class="panel"><pre><code><span class="k">const int</span> sensorPin = <span class="n">2</span>;
+
+<span class="k">void</span> <span class="f">setup</span>() {
+  Serial.<span class="f">begin</span>(<span class="n">9600</span>);
+  <span class="f">pinMode</span>(sensorPin, INPUT);
+}
+
+<span class="k">void</span> <span class="f">loop</span>() {
+  <span class="k">int</span> sensorState = <span class="f">digitalRead</span>(sensorPin);
+
+  <span class="k">if</span> (sensorState == LOW) {
+    Serial.<span class="f">write</span>(<span class="s">'e'</span>);
+    <span class="f">delay</span>(<span class="n">500</span>);
+  }
+  <span class="f">delay</span>(<span class="n">100</span>);
+}</code></pre></div>
+        <div role="tabpanel" class="panel" hidden><pre><code><span class="k">import</span> processing.serial.*;
+<span class="k">import</span> processing.video.*;
+
+Serial myPort;
+Movie myMovie;
+
+<span class="k">void</span> <span class="f">setup</span>() {
+  <span class="f">size</span>(<span class="n">1280</span>, <span class="n">720</span>);
+  <span class="f">background</span>(<span class="n">0</span>);
+  String portName = <span class="s">"COM3"</span>;
+  myPort = <span class="k">new</span> Serial(<span class="k">this</span>, portName, <span class="n">9600</span>);
+  myMovie = <span class="k">new</span> Movie(<span class="k">this</span>, <span class="s">"my_video.mp4"</span>);
+}
+
+<span class="k">void</span> <span class="f">draw</span>() {
+  <span class="k">while</span> (myPort.<span class="f">available</span>() > <span class="n">0</span>) {
+    <span class="k">char</span> inChar = myPort.<span class="f">readChar</span>();
+    <span class="k">if</span> (inChar == <span class="s">'e'</span>) {
+      <span class="k">if</span> (myMovie != <span class="k">null</span>) {
+        myMovie.<span class="f">play</span>();
+      }
+    }
+  }
+  <span class="k">if</span> (myMovie.<span class="f">available</span>()) {
+    myMovie.<span class="f">read</span>();
+  }
+  <span class="f">image</span>(myMovie, <span class="n">0</span>, <span class="n">0</span>, width, height);
+}
+
+<span class="k">void</span> <span class="f">movieEvent</span>(Movie m) {
+  m.<span class="f">stop</span>();
+}</code></pre></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SCENARIO -->
+<section class="sec" id="scenario">
+  <div class="wrap">
+    <p class="eyebrow">Experience</p>
+    <h2 class="h2 reveal">Scenario</h2>
+    <div class="scen">
+      <figure class="reveal"><button class="zoom" type="button" data-cap="Step 1"><img src="p/a-sc-1.webp" alt="A visitor examining a burned letter" loading="lazy"></button><figcaption><b>1</b>The visitor walks into the scene and examines the objects.</figcaption></figure>
+      <figure class="reveal" style="--d:.12s"><button class="zoom" type="button" data-cap="Step 2"><img src="p/a-sc-2.webp" alt="A visitor blowing on a charred rabbit" loading="lazy"></button><figcaption><b>2</b>Following the guidance, they blow on an object to learn more.</figcaption></figure>
+      <figure class="reveal"><button class="zoom" type="button" data-cap="Step 3"><img src="p/a-sc-3.webp" alt="A video of firefighters projected beside the visitor" loading="lazy"></button><figcaption><b>3</b>The video for that object plays on the projection.</figcaption></figure>
+      <figure class="reveal" style="--d:.12s"><button class="zoom" type="button" data-cap="Step 4"><img src="p/a-sc-4.webp" alt="A visitor reaching toward more objects" loading="lazy"></button><figcaption><b>4</b>They move on to more objects and the stories behind them.</figcaption></figure>
+    </div>
+    <a class="video-btn reveal" href="https://drive.google.com/file/d/1sUD0BKwanc-O1A4iStr3xITYuHjzBnc-/view?usp=sharing" target="_blank" rel="noopener">Watch the installation video</a>
+  </div>
+</section>
+
+<!-- FEEDBACK -->
+<section class="sec" id="feedback">
+  <div class="wrap">
+    <p class="eyebrow">Evaluation</p>
+    <h2 class="h2 reveal">User feedback</h2>
+    <div class="fb">
+      <blockquote class="reveal">“Coming out of the third layer, I felt an overwhelming sense of emptiness and oppression. The impact of the visuals and the interaction was simply too intense.”</blockquote>
+      <blockquote class="reveal" style="--d:.12s">“Many environmental artworks end on an optimistic note that ‘we can make a difference.’ This installation doesn't. It confronts you with how irreversible the loss is.”</blockquote>
+      <blockquote class="reveal">“It doesn't rely on the cold, technological feel of buttons or touchscreens. It uses breathing. You're using the power within your own body to try to awaken a life that has passed away.”</blockquote>
+      <blockquote class="reveal" style="--d:.12s">“When I blew on that charred rabbit and saw it come to life on the screen, my breath nearly stopped.”</blockquote>
+    </div>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="wrap next-proj">
+    <a href="index.html#t127"><small>Next project</small><b>Redesigning a Week on Online Learning →</b></a>
+    <p class="contact">Contact · <code id="email">winniehe@gse.harvard.edu</code></p>
+  </div>
+</section>
+</main>
+<script src="project.js"></script>
+</body>
+</html>
